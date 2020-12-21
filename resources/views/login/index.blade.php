@@ -1,2 +1,2 @@
 ログインページ
-<a href="/login/signup">サインアップページへ</a>
+<a href="/login">サインアップページへ</a>

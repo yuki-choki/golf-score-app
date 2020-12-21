@@ -14,5 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'LoginController@index');
-Route::get('login', 'LoginController@index');
-Route::get('login/signup', 'LoginController@signup');
+// Route::get('login', 'LoginController@index');
+// Route::get('login/signup', 'LoginController@signup');
+
+Auth::routes();
+
+Route::get('/users', 'UsersController@index');
+Route::get('/home', 'HomeController@index')->name('home');
