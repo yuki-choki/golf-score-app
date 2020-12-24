@@ -70,6 +70,12 @@
                         </div>
                     </form>
                 </div>
+                <div class="card-body text-center">
+                    <a class="btn btn-primary" href="/login/twitter">twitter</a>
+                    <a class="btn btn-primary" href="/login/facebook">facebook</a>
+                    <a class="btn btn-primary" href="/login/google">google</a>
+                    <a class="btn btn-primary" href="/login/github">github</a>
+                </div>
             </div>
         </div>
     </div>
