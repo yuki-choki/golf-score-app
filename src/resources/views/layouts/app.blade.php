@@ -11,13 +11,18 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <!-- フラッシュメッセージ用 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- フラッシュメッセージ用 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
@@ -79,4 +84,16 @@
         </main>
     </div>
 </body>
+<script>
+    @if (session('msg_success'))
+        $(function () {
+            toastr.success('{{ session('msg_success') }}');
+        });
+    @endif
+    @if (session('msg_danger'))
+        $(function () {
+            toastr.error('{{ session('msg_danger') }}');
+        });
+    @endif
+</script>
 </html>

@@ -33,10 +33,10 @@ class UsersController extends Controller
         unset($params['_token']);
         $params['update_job'] = 'users/update';
         if ($user->fill($params)->save()) {
-            $msg = 'ユーザ情報を更新しました。';
+            session()->flash('msg_success', 'プロフィールを更新しました');
         } else {
-            $msg = 'ユーザ情報の更新に失敗しました。';
+            session()->flash('msg_error', 'プロフィールの更新に失敗しました');
         }
-        return redirect()->route('users.edit')->with('message', $msg);
+        return redirect()->route('users.edit');
     }
 }
