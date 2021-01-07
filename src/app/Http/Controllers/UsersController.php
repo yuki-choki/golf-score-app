@@ -32,6 +32,12 @@ class UsersController extends Controller
         $params = $request->all();
         unset($params['_token']);
         $params['update_job'] = 'users/update';
+        // プロフィール画像が選択されていればファイル名を変更して DB に保存
+        if (isset($params['avatar'])) {
+            $filePath = $params['avatar']->store('public');
+            // /storage/ はシンボリックリンク。実際のパスは storage/app/public/
+            $params['avatar'] = str_replace('public/', '/storage/', $filePath);
+        }
         if ($user->fill($params)->save()) {
             session()->flash('msg_success', 'プロフィールを更新しました');
         } else {
