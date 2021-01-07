@@ -2,42 +2,36 @@
 
 @section('content')
     <div class="container">
-        @if (session('message'))
-        <div class="alert alert-success">
-            {{ session('message') }}
-        </div>
-        @endif
-        <div class="col-md-12">
-            <div class="text-center">
-                <h3>ユーザ情報編集</h3>
-            </div>
-        </div>
         <div class="row">
-            <div class="col-md-3">
-                <ul class="list-group">
-                    <a href="{{ route('users.edit') }}"><li class="list-group-item">ユーザ情報編集</li></a>
-                    <a href="#"><li class="list-group-item">ラウンド記録</li></a>
-                    <a href="#"><li class="list-group-item">友達</li></a>
-                    <a href="#"><li class="list-group-item">設定</li></a>
-                </ul>
-            </div>
+            @include('components.sidebar')
             <div class="col-md-9">
                 <div class="card">
+                    <div class="card-header"><h5 class="mb-0">プロフィール編集</h5></div>
                     {{ Form::open(['url' => 'users/update', 'files' => true]) }}
                     <div class="card-body">
-                        <div class="col-sm-12 col-md-6">
-                            <p class="mb-0">{{ Form::label('name', '名前', ['class' => 'mb-0']) }}</p>
-                            <p>{{ Form::text('name', $user->name, ['class' => 'form-control']) }}</p>
-                            <p class="mb-0">{{ Form::label('email', 'メールアドレス', ['class' => 'mb-0']) }}</p>
-                            <p>{{ Form::text('email', $user->email, ['class' => 'form-control']) }}</p>
+                        <div class="form-group row">
+                            {{ Form::label('name', '名前', ['class' => 'col-md-4 col-form-label text-md-right']) }}
+                            <div class="col-md-6">
+                                {{ Form::text('name', $user->name, ['class' => 'form-control']) }}
+                            </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
-                            {{ Form::label('avatar', 'プロフィール写真') }}
-                            {{ Form::file('avatar') }}
+                        <div class="form-group row">
+                            {{ Form::label('email', 'メールアドレス', ['class' => 'col-md-4 col-form-label text-md-right']) }}
+                            <div class="col-md-6">
+                                {{ Form::text('email', $user->email, ['class' => 'form-control']) }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body pt-0 text-right">
-                        {{ Form::submit('更新', ['class' => 'btn btn-primary']) }}
+                        <div class="form-group row">
+                            {{ Form::label('avatar', 'プロフィール写真', ['class' => 'col-md-4 col-form-label text-md-right']) }}
+                            <div class="col-md-6">
+                                {{ Form::file('avatar') }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4 text-right">
+                                {{ Form::submit('更新', ['class' => 'btn btn-primary']) }}
+                            </div>
+                        </div>
                     </div>
                     {{ Form::close() }}
                 </div>

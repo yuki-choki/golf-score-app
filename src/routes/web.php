@@ -25,3 +25,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
+Route::get('/password/change', 'Auth\ChangePasswordController@showChangePasswordForm')->name('password.form');
+Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')->name('password.change');
