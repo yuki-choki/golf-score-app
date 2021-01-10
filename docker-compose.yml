@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   web:
     image: nginx:1.15.6
@@ -11,20 +11,5 @@ services:
       - .:/var/www/html
   app:
     build: ./docker/php
-    depends_on:
-      - mysql
     volumes:
       - .:/var/www/html
-  mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: sample
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-volumes:
-  mysql-data:

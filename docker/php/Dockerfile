@@ -8,7 +8,9 @@ RUN apt-get update \
 git \
 zip \
 unzip \
-vim
+vim 
+
+RUN echo 'alias ll="ls -l"' >> /root/.bashrc
 
 RUN apt-get update \
     && apt-get install -y libpq-dev \
