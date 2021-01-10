@@ -84,6 +84,7 @@ class LoginController extends Controller
                     'name' => $userName,
                     'email' => $socialAccount->getEmail(),
                     'avatar' => $socialAccount->getAvatar(),
+                    'update_job' => 'login/handleProviderCallback',
                 ]);
         } else {
             ($user = new User([
@@ -92,6 +93,7 @@ class LoginController extends Controller
                 'social_name' => $social,
                 'social_id' => $socialAccount->getId(),
                 'avatar' => $socialAccount->getAvatar(),
+                'update_job' => 'login/handleProviderCallback',
             ]))->save();
         }
 

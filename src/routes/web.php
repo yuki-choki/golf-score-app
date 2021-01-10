@@ -28,3 +28,6 @@ Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCall
 
 Route::get('/password/change', 'Auth\ChangePasswordController@showChangePasswordForm')->name('password.form');
 Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')->name('password.change');
+Route::resources([
+    'scores' => 'ScoreController'
+]);
