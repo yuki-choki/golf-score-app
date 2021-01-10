@@ -61,6 +61,7 @@ class LoginController extends Controller
     public function handleProviderCallback($social)
     {
         if (!in_array($social, ['github', 'facebook', 'google', 'twitter'], true)) {
+            session()->flash('msg_success', 'ログインしました');
             return redirect()->to('/home');
         }
         try {
@@ -95,6 +96,7 @@ class LoginController extends Controller
         }
 
         auth()->login($user, true);
+        session()->flash('msg_success', 'ログインしました');
         return redirect()->to('/home');
     }
 }

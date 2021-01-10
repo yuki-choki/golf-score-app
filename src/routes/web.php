@@ -14,13 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index');
-// Route::get('login', 'LoginController@index');
-// Route::get('login/signup', 'LoginController@signup');
 
 Auth::routes();
 
-Route::get('/users', 'UsersController@index');
+Route::get('/users', 'UsersController@index')->name('users');
+Route::get('/users/edit/', 'UsersController@edit')->name('users.edit');
+Route::get('/users/update/', 'UsersController@update')->name('users.update');
+Route::post('/users/update/', 'UsersController@update')->name('users.update');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
+Route::get('/password/change', 'Auth\ChangePasswordController@showChangePasswordForm')->name('password.form');
+Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')->name('password.change');
