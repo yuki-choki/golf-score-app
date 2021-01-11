@@ -17,7 +17,8 @@
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^2.5",
-        "laravelcollective/html": "^6.2"
+        "laravelcollective/html": "^6.2",
+        "rakuten-ws/rws-php-sdk": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
