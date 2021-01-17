@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateCorseHolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('corse_holes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable();
-            $table->string('avatar')->nullable();
-            $table->string('social_name', 255)->nullable();
-            $table->string('social_id', 255)->nullable();
-            $table->rememberToken();
+            $table->foreignId('corse_id')->constrained('corses');
+            $table->string('hole', 10);
+            $table->integer('back')->nullable();
+            $table->integer('regular')->nullable();
+            $table->integer('front')->nullable();
+            $table->integer('gold')->nullable();
+            $table->integer('ladies')->nullable();
+            $table->integer('par')->nullable();
+            $table->integer('hd')->nullable();
             $table->string('update_job', 50);
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->default(DB::raw('NULL on update CURRENT_TIMESTAMP'));
@@ -37,6 +38,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('corse_holes');
     }
 }

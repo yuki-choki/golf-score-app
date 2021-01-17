@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             @include('components.sidebar')
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header"><h5 class="mb-0">ユーザ情報</h5></div>
                     <div class="card-body text-center">
