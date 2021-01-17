@@ -4,19 +4,38 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    ラウンド記録分析
+                    スコア一覧
                 </div>
                 <div class="card-body">
-                    <ul>
-                        @foreach ($game as $data)
-                        <li>
-                            {{ $data }}
-                        </li>
-                        @endforeach
-                    </ul>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ラウンド日</th>
+                                <th>コース名</th>
+                                <th>スコア</th>
+                                <th>パット</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($games as $game)
+                                <tr>
+                                    <td>{{ $game->date }}</td>
+                                    <td>{{ $game->corse->name }}</td>
+                                    <td>{{ $game->total_score }}</td>
+                                    <td>{{ $game->total_putter }}</td>
+                                    <td>
+                                        {{ Form::open(['url' => route('scores.show', ['score' => $game->id]), 'method' => 'GET']) }}
+                                        {{ Form::submit('選択', ['class' => 'btn btn-sm btn-primary']) }}
+                                        {{ Form::close() }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
