@@ -15,6 +15,8 @@ class CreateScoreCardsTable extends Migration
     {
         Schema::create('score_cards', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->nullable();
+            $table->foreignId('game_id')->constrained('games');
             $table->string('player_name');
             $table->integer('score_1')->nullable();
             $table->integer('score_2')->nullable();

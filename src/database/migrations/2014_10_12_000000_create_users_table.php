@@ -28,11 +28,6 @@ class CreateUsersTable extends Migration
             $table->dateTime('updated_at')->nullable()->default(DB::raw('NULL on update CURRENT_TIMESTAMP'));
             $table->tinyInteger('delete_flg')->default(0);
         });
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('social_name')->nullable(false)->change();
-            $table->string('social_id')->nullable(false)->change();
-            // $table->dateTime('updated_at')->nullable()->default(NULL)->change();
-        });
     }
 
     /**
