@@ -28,6 +28,9 @@ Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCall
 
 Route::get('/password/change', 'Auth\ChangePasswordController@showChangePasswordForm')->name('password.form');
 Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')->name('password.change');
+Route::get('/scores/search', 'ScoreController@search')->name('scores.search');
+Route::post('/scores/search', 'ScoreController@search')->name('scores.search.post');
+Route::post('/scores/create', 'ScoreController@create')->name('scores.create');
 Route::resources([
     'scores' => 'ScoreController'
 ]);
