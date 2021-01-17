@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
                     ラウンド記録編集
