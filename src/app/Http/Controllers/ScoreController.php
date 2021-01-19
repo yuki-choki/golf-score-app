@@ -91,50 +91,10 @@ class ScoreController extends Controller
     public function show($id)
     {
         $game = Game::find($id)->first();
-        $names = [];
-        $rows = [];
-        // View にテーブル形式で表示するためにデータを形成
-        foreach ($game->score_cards as $index => $score) {
-            $names[] = $score->player_name;
-            for ($i = 1; $i < 22; $i++) {
-                switch ($i) {
-                    case (config('golf_role.BEFORE_HALF_NUM')):
-                        if ($index < 1) {
-                            $rows[$i][] = $score->getHalfScoreCount('par', 'out') . ' / ' . $score->getHalfScoreCount('yard', 'out');
-                            $rows[$i][] = $score->getHalfScoreCount('score', 'out') . ' (' . $score->getHalfScoreCount('putter', 'out') . ')';
-                        } else {
-                            $rows[$i][] = $score->getHalfScoreCount('score', 'out');
-                        }
-                        break;
-                    case (config('golf_role.AFTER_HALF_NUM')):
-                        if ($index < 1) {
-                            $rows[$i][] = $score->getHalfScoreCount('par', 'in') . ' / ' . $score->getHalfScoreCount('yard', 'in');
-                            $rows[$i][] = $score->getHalfScoreCount('score', 'in') . ' (' . $score->getHalfScoreCount('putter', 'in') . ')';
-                        } else {
-                            $rows[$i][] = $score->getHalfScoreCount('score', 'in');
-                        }
-                        break;
-                    case (config('golf_role.TOTAL_NUM')):
-                        if ($index < 1) {
-                            $rows[$i][] = $score->getScoreCount('par') . ' / ' . $score->getScoreCount('yard');
-                            $rows[$i][] = $score->getScoreCount('score') . ' (' . $score->getScoreCount('putter') . ')';
-                        } else {
-                            $rows[$i][] = $score->getScoreCount('score');
-                        }
-                        break;
-                    default:
-                        $col_num = ($i > 10) ? $i - 1 : $i; // Holeが10以上になるとforのindexHole数がズレるためindexから1をマイナス
-                        if ($index < 1) {
-                            $rows[$i][] = $score->{'par_' . $col_num} . ' / ' . $score->{'yard_' . $col_num};
-                            $rows[$i][] = $score->{'score_' . $col_num} . ' (' . $score->{'putter_' . $col_num} . ')';
-                        } else {
-                            $rows[$i][] = $score->{'score_' . $col_num};
-                        }
-                        break;
-                }
-            }
-        }
-        return view('score.show', compact('game', 'names', 'rows'));
+        $names = $this->getPlayerName($game);
+        $rows = $this->createTableData($game);
+
+        return view('score.show', compact('game', 'rows', 'names'));
     }
 
     /**
@@ -145,7 +105,11 @@ class ScoreController extends Controller
      */
     public function edit($id)
     {
-        return view('score.edit');
+        $game = Game::find($id)->first();
+        $names = $this->getPlayerName($game);
+        $rows = $this->createTableData($game);
+
+        return view('score.edit', compact('game', 'names', 'rows'));
     }
 
     /**
@@ -157,7 +121,30 @@ class ScoreController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $game = Game::find($id);
+        $params = $request->all();
+        unset($params['_token'], $params['_method']);
+        $score_data = [];
+        $score_data = $params['player_name'];
+        foreach ($params['score'] as $hole => $data) {
+            foreach ($data as $id => $score) {
+                if (is_array($score)) {
+                    $score_data[$id]['score_' . $hole] = $score['score'];
+                    $score_data[$id]['putter_' . $hole] = $score['putter'];
+                } else {
+                    $score_data[$id]['score_' . $hole] = $score;
+                }
+            }
+        }
+        $score_cards = $game->score_cards;
+        foreach ($score_cards as $score) {
+            $score->fill($score_data[$score->id]);
+            $score->save();
+        }
+        $game->memo = $params['memo'];
+        $game->save();
+
+        return redirect()->route('scores.show', ['score' => $game->id]);
     }
 
     /**
@@ -169,5 +156,64 @@ class ScoreController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function createTableData($game)
+    {
+        $res = [];
+        // View にテーブル形式で表示するためにデータを形成
+        foreach ($game->score_cards as $index => $score) {
+            for ($i = 1; $i < 22; $i++) {
+                switch ($i) {
+                    case (config('golf_role.BEFORE_HALF_NUM')):
+                        if ($index < 1) {
+                            $res['b_half'][$score->id] = $score->getHalfScoreCount('par', 'out') . ' / ' . $score->getHalfScoreCount('yard', 'out');
+                            $res['b_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'out');
+                            $res['b_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'out');
+                        } else {
+                            $res['b_half'][$score->id] = $score->getHalfScoreCount('score', 'out');
+                        }
+                        break;
+                    case (config('golf_role.AFTER_HALF_NUM')):
+                        if ($index < 1) {
+                            $res['a_half'][$score->id] = $score->getHalfScoreCount('par', 'in') . ' / ' . $score->getHalfScoreCount('yard', 'in');
+                            $res['a_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'in');
+                            $res['a_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'in');
+                        } else {
+                            $res['a_half'][$score->id] = $score->getHalfScoreCount('score', 'in');
+                        }
+                        break;
+                    case (config('golf_role.TOTAL_NUM')):
+                        if ($index < 1) {
+                            $res['total'][$score->id] = $score->getScoreCount('par') . ' / ' . $score->getScoreCount('yard');
+                            $res['total']['score'][$score->id]['score'] = $score->getScoreCount('score');
+                            $res['total']['score'][$score->id]['putter'] =  $score->getScoreCount('putter');
+                        } else {
+                            $res['total'][$score->id] = $score->getScoreCount('score');
+                        }
+                        break;
+                    default:
+                        $row_num = ($i > 10) ? $i - 1 : $i; // Holeが10以上になるとforのindexHole数がズレるためindexから1をマイナス
+                        if ($index < 1) {
+                            $res[$row_num][$score->id] = $score->{'par_' . $row_num} . ' / ' . $score->{'yard_' . $row_num};
+                            $res[$row_num]['score'][$score->id]['score'] = $score->{'score_' . $row_num};
+                            $res[$row_num]['score'][$score->id]['putter'] = $score->{'putter_' . $row_num};
+                        } else {
+                            $res[$row_num][$score->id] = $score->{'score_' . $row_num};
+                        }
+                        break;
+                }
+            }
+        }
+        return $res;
+    }
+
+    private function getPlayerName($game)
+    {
+        $names = [];
+        foreach ($game->score_cards as $score) {
+            $names[$score->id] = $score->player_name;
+        }
+        return $names;
     }
 }
