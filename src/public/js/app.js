@@ -2021,8 +2021,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -38338,8 +38336,6 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-6" }, [
-      _c("h5", [_vm._v("スコアカードアップロード")]),
-      _vm._v(" "),
       _c(
         "div",
         { staticClass: "dropzone-field" },
