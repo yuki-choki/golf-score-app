@@ -1,0 +1,11 @@
+main .container,
+nav .container {
+    max-width: 100%;
+}
+
+.dropzone-field .dropzone {
+    min-height: 300px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
