@@ -11,5 +11,20 @@ services:
       - .:/var/www/html
   app:
     build: ./docker/php
+    depends_on:
+      - mysql
     volumes:
       - .:/var/www/html
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: sample
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "4307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data:

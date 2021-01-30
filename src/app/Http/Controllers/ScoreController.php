@@ -42,12 +42,12 @@ class ScoreController extends Controller
     public function search(Request $request)
     {
         $searchData = [];
-        if ($request->method() === 'POST') {
-            $params = $request->all();
-            unset($params['_token']);
-            $searchData = Corse::SearchCorse($params)->get();
+        $params = $request->input();
+        if ($params) {
+            $searchData = Corse::SearchCorse($params)->paginate(15);
         }
-        return view('score.search', compact('searchData', 'params', 'request'));
+
+        return view('score.search', compact('searchData', 'params'));
     }
 
     /**
@@ -77,8 +77,10 @@ class ScoreController extends Controller
     {
         if ($request->getMethod() === 'POST') {
             $params = $request->all();
-            unset($params['_token']);
+            // post されてきたデータをbase64エンコードする
+            $base64_file = base64_encode($params['file']->path());
             // OCR 読み込み処理を記述
+            return $base64_file; // 動作確認としてbase64エンコードしたデータを返す
         }
     }
 

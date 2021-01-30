@@ -9,17 +9,17 @@
                 <div class="card-header">
                     スコアカード読み込み
                 </div>
-                {{ Form::open(['action' => 'ScoreController@store' , 'method' => 'post', 'files' => true]) }}
-                <div class="card-body">
+                {{ Form::open(['action' => 'ScoreController@store' , 'method' => 'post', 'id' => 'upload-form']) }}
+                <div class="card-body pb-0">
                     <div>
                         {{ Form::hidden('corse_id', $corse['id']) }}
-                        <h5 class="pb-1 border-rgba(0, 0, 0, 0.125) border-bottom">コース名：{{ $corse['name'] }}</h5>
                     </div>
-                    {{ Form::label('読み込みファイル') }}
-                    <div class="form-group">
-                        {{ Form::file('score_card', ['id' => 'score_card_data']) }}
-                    </div>
-                    <div>
+                    <upload-component
+                        :corse="{{ json_encode($corse) }}"
+                        :url="{{ json_encode(route('scores.store')) }}"
+                    >
+                    </upload-component>
+                    <div class="col-12 my-3">
                         {{ Form::submit('読込開始', ['class' => 'btn btn-primary']) }}
                     </div>
                 </div>
