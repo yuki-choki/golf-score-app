@@ -14,7 +14,7 @@ class Corse extends Model
         if ($array['pref_code'] !== '0') {
             $query->where('pref_code', $array['pref_code']);
         }
-        if ($array['name']) {
+        if (isset($array['name'])) {
             $query->where('name', 'like', '%'. $array['name'] .'%');
         }
 
