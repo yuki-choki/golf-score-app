@@ -28,7 +28,6 @@
                     @if ($request->method() === 'POST')
                         @if (count($searchData) > 0)
                             <div class="corse-result mt-3">
-                                {{ Form::open(['action' => 'ScoreController@create']) }}
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -38,19 +37,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($searchData as $corse)
-                                    <tr>
-                                        <td>{{ $corse['name'] }}</td>
-                                        <td>{{ $corse['address'] }}</td>
-                                        <td>
-                                            {{ Form::hidden('pref_id', $corse['id']) }}
-                                            {{ Form::submit('選択', ['class' => 'btn btn-sm btn-success']) }}
-                                        </td>
-                                    </tr>
-                                        @endforeach
+                                    @foreach ($searchData as $corse)
+                                        <tr>
+                                            <td>{{ $corse['name'] }}</td>
+                                            <td>{{ $corse['address'] }}</td>
+                                            <td>
+                                                {{ Form::open(['action' => 'ScoreController@create']) }}
+                                                {{ Form::hidden('pref_id', $corse['id']) }}
+                                                {{ Form::submit('選択', ['class' => 'btn btn-sm btn-success']) }}
+                                                {{ Form::close() }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
-                                {{ Form::close() }}
                             </div>
                         @else
                            <div class="mt-3">検索条件に該当するゴルフコースはありません</div>
