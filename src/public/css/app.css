@@ -582,6 +582,8 @@ pre code {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 @media (min-width: 576px) {
@@ -614,7 +616,7 @@ pre code {
   .container-md,
   .container-sm,
   .container {
-    max-width: 100%;
+    max-width: 1140px;
   }
 }
 
