@@ -5,16 +5,16 @@
             <div class="col-10 ml-3 p-0"><span class="text-base">ホーム</span></div>
         </div>
     </a>
-    <a class="hover:no-underline" href="{{ route('scores.search') }}">
+    <a class="hover:no-underline" href="{{ route('users.edit') }}">
         <div class="side-bar-item d-flex p-3 hover:bg-base-default hover:text-white">
-            <div class="col-2 text-center p-0"><i class="fas fa-pen fa-lg leading-6"></i></div>
-            <div class="col-10 ml-3 p-0"><span class="text-base">スコア登録</span></div>
+            <div class="col-2 text-center p-0"><i class="fas fa-home fa-lg leading-6"></i></div>
+            <div class="col-10 ml-3 p-0"><span class="text-base">プロフィール編集</span></div>
         </div>
     </a>
-    <a class="hover:no-underline" href="{{ route('scores.index') }}">
+    <a class="hover:no-underline" href="{{ route('password.form') }}">
         <div class="side-bar-item d-flex p-3 hover:bg-base-default hover:text-white">
-            <div class="col-2 text-center p-0"><i class="fas fa-clipboard-list fa-lg leading-6"></i></div>
-            <div class="col-10 ml-3 p-0"><span class="text-base">スコア一覧</span></div>
+            <div class="col-2 text-center p-0"><i class="fas fa-pen fa-lg leading-6"></i></div>
+            <div class="col-10 ml-3 p-0"><span class="text-base">パスワード変更</span></div>
         </div>
     </a>
     <a class="hover:no-underline" href="#">

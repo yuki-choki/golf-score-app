@@ -1,11 +1,14 @@
+body {
+    background-color: #fff;
+}
+
+main .container,
+main .container .row,
+main .container .row .side-bar {
+    height: 100%;
+}
+
 main .container,
 nav .container {
     max-width: 100%;
-}
-
-.dropzone-field .dropzone {
-    min-height: 300px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }

@@ -3,8 +3,8 @@
 @section('content')
     <div class="container">
         <div class="row">
-            @include('components.sidebar')
-            <div class="col-md-10">
+            @include('components.user.sidebar')
+            <div class="col-md-10 mt-3">
                 <div class="card">
                     <div class="card-header"><h5 class="mb-0">プロフィール編集</h5></div>
                     {{ Form::open(['url' => 'users/update', 'files' => true]) }}
