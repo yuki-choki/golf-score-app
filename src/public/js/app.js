@@ -38387,7 +38387,7 @@ var render = function() {
     _c("div", { staticClass: "col-12 mb-3" }, [
       _c(
         "h5",
-        { staticClass: "pb-1 border-rgba(0, 0, 0, 0.125) border-bottom" },
+        { staticClass: "pb-1 border-rgba(0, 0, 0, 0.125) border-bottom h5" },
         [_vm._v("コース名：" + _vm._s(_vm.corse.name))]
       )
     ]),

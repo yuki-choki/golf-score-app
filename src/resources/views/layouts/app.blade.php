@@ -32,7 +32,7 @@
     <div id="app" class="vh-100">
         <nav class="navbar navbar-expand-md shadow-sm">
             <div class="container">
-                <a class="navbar-brand text-base-default hover:text-base-dark" href="{{ url('/') }}">
+                <a class="navbar-brand text-base-dark hover:text-base-dark" href="{{ url('/') }}">
                     <h3>{{ config('app.name') }}</h3>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

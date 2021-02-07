@@ -9,7 +9,7 @@
 <template>
     <div class="contents">
         <div class="col-12 mb-3">
-            <h5 class="pb-1 border-rgba(0, 0, 0, 0.125) border-bottom">コース名：{{ corse.name }}</h5>
+            <h5 class="pb-1 border-rgba(0, 0, 0, 0.125) border-bottom h5">コース名：{{ corse.name }}</h5>
         </div>
         <div class="col-md-6">
             <div class="dropzone-field">
