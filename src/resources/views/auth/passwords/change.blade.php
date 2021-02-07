@@ -3,10 +3,10 @@
 @section('content')
 <div class="container">
     <div class="row">
-        @include('components.sidebar')
-        <div class="col-md-10">
+        @include('components.user.sidebar')
+        <div class="col-md-10 pt-3 bg-gray-50">
+            <h3 class="h3">パスワード変更</h3>
             <div class="card">
-                <div class="card-header"><h5 class="mb-0">パスワード変更</h5></div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.change') }}">
                         @csrf
@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4 text-right">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-success">
                                     更新
                                 </button>
                             </div>

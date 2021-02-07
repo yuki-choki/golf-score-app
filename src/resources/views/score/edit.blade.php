@@ -4,22 +4,20 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-10">
+        <div class="col-md-10 py-3 bg-gray-50">
+            <h5 class="h5">スコア詳細</h5>
             <div class="card">
-                <div class="card-header">
-                    スコア詳細
-                </div>
                 <div class="card-body">
                     {{ Form::open(['url' => route('scores.update', $game->id), 'method' => 'PATCH']) }}
                     <div class="row">
                         <div class="col-md-7">
-                            <h3>{{ $game->corse->name }}</h3>
-                            <h5>
+                            <h5 class="h5">{{ $game->corse->name }}</h5>
+                            <h5 class="h5">
                                 {{ date('Y年m月d日', strtotime($game->date)) . '　' . $game->weather}}
                             </h5>
                             <table class="table text-center table-bordered lead">
                                 <tr>
-                                    <th class="bg-light" width="10%">ホール</th>
+                                    <th class="bg-light" width="10%">Hole</th>
                                     <td width="14%">Par / Yard</td>
                                     @foreach ($names as $key => $name)
                                         <td width="14%">
@@ -34,10 +32,10 @@
                                                 <th class="bg-light" width="10%">
                                                     @switch($row_num)
                                                         @case('b_half')
-                                                            前半
+                                                            Out
                                                             @break
                                                         @case('a_half')
-                                                            後半
+                                                            In
                                                             @break
                                                         @case('total')
                                                             Total
@@ -81,8 +79,8 @@
                             </table>
                         </div>
                         <div class="col-md-5 pl-0">
-                            <h3>&nbsp;</h3>
-                            <h5>memo</h5>
+                            <h5 class="h5">&nbsp;</h5>
+                            <h5 class="h5">memo</h5>
                             <div class="game-note-container">
                                 {{ Form::textarea('memo', $game->memo, ['class' => 'form-control form-control-sm']) }}
                             </div>
@@ -90,7 +88,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {{ Form::submit('更新', ['class' => 'btn btn-primary']) }}
+                            {{ Form::submit('更新', ['class' => 'btn btn-success']) }}
                         </div>
                     </div>
                     {{ Form::close() }}

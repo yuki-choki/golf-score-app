@@ -4,28 +4,26 @@
     <div class="container">
         <div class="row">
             @include('components.main.sidebar')
-            <div class="col-md-10">
+            <div class="col-md-10 pt-3 bg-gray-50">
+                <h1 class="h3">ラウンド記録</h1>
                 <div class="card">
-                    <div class="card-header">
-                        ラウンド記録
-                    </div>
                     <div class="card-body">
-                        <div class="row mt-3" style="margin-left: 100px">
-                            <div class="col-md-2">
-                                <div><h5>平均スコア</h5></div>
-                                <div><h3 class="pl-3">{{ $average['score'] }}</h3></div>
+                        <div class="row m-auto text-center w-75 lead">
+                            <div class="col-md-3 mt-3">
+                                <div>平均スコア</div>
+                                <div class="pl-3">{{ $average['score'] }}</div>
                             </div>
-                            <div class="col-md-2">
-                                <div><h5>平均パット</h5></div>
-                                <div><h3 class="pl-3">{{ $average['putter'] }}</h3></div>
+                            <div class="col-md-3 mt-3">
+                                <div>平均パット</div>
+                                <div class="pl-3">{{ $average['putter'] }}</div>
                             </div>
-                            <div class="col-md-3">
-                                <div><h5>ベストスコア</h5></div>
-                                <div><h3 class="pl-3">{{ $record['best'] }}</h3></div>
+                            <div class="col-md-3 mt-3 text-success">
+                                <div>ベストスコア</div>
+                                <div class="pl-3">{{ $record['best'] }}</div>
                             </div>
-                            <div class="col-md-3    ">
-                                <div><h5>ワーストスコア</h5></div>
-                                <div><h3 class="pl-3">{{ $record['worst'] }}</h3></div>
+                            <div class="col-md-3 mt-3 text-danger">
+                                <div>ワーストスコア</div>
+                                <div class="pl-3">{{ $record['worst'] }}</div>
                             </div>
                         </div>
                         <div class="col-12" style="height: 300px">
@@ -33,7 +31,7 @@
                                 <div id="target" class="col-12"></div>
                             @else
                                 <div class="text-center pt-5">
-                                    <h3 class="pt-5">ラウンド記録がありません</h3>
+                                    <h3 class="pt-5 lead">ラウンド記録がありません</h3>
                                 </div>
                             @endif
                         </div>

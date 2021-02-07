@@ -4,11 +4,9 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-10">
+        <div class="col-md-10 pt-3 bg-gray-50">
+            <h3 class="h3">スコア一覧</h3>
             <div class="card">
-                <div class="card-header">
-                    スコア一覧
-                </div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
@@ -29,7 +27,7 @@
                                     <td>{{ $game->total_putter }}</td>
                                     <td>
                                         {{ Form::open(['url' => route('scores.show', ['score' => $game->id]), 'method' => 'GET']) }}
-                                        {{ Form::submit('選択', ['class' => 'btn btn-sm btn-primary']) }}
+                                        {{ Form::submit('選択', ['class' => 'btn btn-sm btn-success']) }}
                                         {{ Form::close() }}
                                     </td>
                                 </tr>
