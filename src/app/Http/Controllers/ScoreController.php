@@ -145,6 +145,7 @@ class ScoreController extends Controller
         }
         $game->memo = $params['memo'];
         $game->save();
+        session()->flash('msg_success', 'スコアを編集しました');
 
         return redirect()->route('scores.show', ['score' => $game->id]);
     }
