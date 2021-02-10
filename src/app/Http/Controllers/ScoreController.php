@@ -161,6 +161,32 @@ class ScoreController extends Controller
         //
     }
 
+    public function analysis(Request $request)
+    {
+        $my_games = Game::all();
+        $my_games->load('corse')->toArray();
+        $corse_lists = ['0' => '未選択'];
+        $params = [];
+        $games = [];
+        foreach ($my_games as $game) {
+            $corse = $game['corse']->toArray();
+            $corse_lists[$corse['id']] = $corse['name'];
+        }
+        if ($request->getMethod() === 'POST') {
+            $params = $request->all();
+            unset($params['_token']);
+            $games = Game::AnalysisSearch($params)->get();
+            $games->load('score_cards');
+            foreach ($games as $key => $game) {
+                //対象ゲームのユーザーのスコアを取得する
+                $score_card = $game->score_cards->firstWhere('user_id', Auth::id());
+                $game->total_score = $score_card->getScoreCount('score');
+                $game->total_putter = $score_card->getScoreCount('putter');
+            }
+        }
+        return view('score.analysis', compact('corse_lists', 'params', 'games'));
+    }
+
     private function createTableData($game)
     {
         $res = [];

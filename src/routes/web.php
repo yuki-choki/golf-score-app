@@ -31,6 +31,8 @@ Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')-
 Route::get('/scores/search', 'ScoreController@search')->name('scores.search');
 Route::post('/scores/search', 'ScoreController@search')->name('scores.search.post');
 Route::post('/scores/create', 'ScoreController@create')->name('scores.create');
+Route::get('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis');
+Route::post('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis.post');
 Route::resources([
     'scores' => 'ScoreController'
 ]);

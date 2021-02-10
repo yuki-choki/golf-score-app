@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $games = Game::orderBy('id', 'desc')->get();
+        $games = Game::all();
         $games->load('score_cards');
         $chart_data = [];
         $chart_data[] = ['ラウンド日', 'スコア', 'パット'];

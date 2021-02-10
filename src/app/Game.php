@@ -14,7 +14,7 @@ class Game extends Model
     protected static function booted()
     {
         static::addGlobalScope('user', function (Builder $builder) {
-            $builder->where('user_id', Auth::id());
+            $builder->where('user_id', Auth::id())->orderBy('date', 'desc');
         });
     }
 
@@ -22,9 +22,24 @@ class Game extends Model
     {
         return $this->belongsTo(Corse::class);
     }
-
+    
     public function score_cards()
     {
         return $this->hasMany(ScoreCard::class);
+    }
+
+    public function scopeAnalysisSearch($query, $array)
+    {
+        if ($array['date_from']) {
+            $query->where('date', '>=', $array['date_from']);
+        }
+        if ($array['date_to']) {
+            $query->where('date', '<=', $array['date_to']);
+        }
+        if ($array['corse_id'] !== '0') {
+            $query->where('corse_id', $array['corse_id']);
+        }
+
+        return $query;
     }
 }
