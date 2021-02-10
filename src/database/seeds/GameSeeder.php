@@ -13,9 +13,9 @@ class GameSeeder extends Seeder
     public function run()
     {
         $params = [];
-        for ($i = 1; $i < 3; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $params[$i]['user_id'] = 1;
-            $params[$i]['corse_id'] = $i;
+            $params[$i]['corse_id'] = random_int(1, 10);
             $params[$i]['date'] = date('Y-m-d');
             $params[$i]['memo'] = 'テストメモ';
             $params[$i]['weather'] = '晴';
