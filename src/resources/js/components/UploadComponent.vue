@@ -1,11 +1,3 @@
-<style>
-    .dropzone-field .dropzone {
-        min-height: 300px; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
 <template>
     <div class="contents">
         <div class="col-12 mb-3">
@@ -35,6 +27,7 @@
         </div>
     </div>
 </template>
+
 <script>
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
@@ -83,3 +76,12 @@
         },
     };
 </script>
+
+<style>
+    .dropzone-field .dropzone {
+        min-height: 300px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
