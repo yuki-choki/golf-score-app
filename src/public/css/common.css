@@ -28,6 +28,9 @@ nav .container {
     background-color: #fff;
     border-color: #212529;
 }
+.btn-google:hover {
+    border-color: #e5e5e5;
+}
 .btn-github {
     color: #fff;
     background-color: #171515;

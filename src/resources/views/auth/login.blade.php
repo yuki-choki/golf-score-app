@@ -8,7 +8,7 @@
                 <h3 class="h3">ログイン</h3>
             </div>
             <div class="card">
-                <div class="card-body">
+                <div class="card-body pb-0">
                     <div>
                         {{ Form::open(['url' => route('login')]) }}
                             <div class="form-group">
@@ -46,7 +46,7 @@
                                 {{ Form::label('remember', 'ログインを記憶する', ['class' => 'mb-0']) }}
                             </div>
                             <div class="form-group">
-                                {{ Form::submit('ログイン', ['class' => 'btn btn-primary btn-lg btn-block']) }}
+                                {{ Form::submit('ログイン', ['class' => 'btn btn-success btn-lg btn-block']) }}
                             </div>
                             @if (Route::has('password.request'))
                                 <a class="btn btn-link pl-0 pt-0" href="{{ route('password.request') }}">
@@ -58,31 +58,37 @@
                     </div>
                 </div>
                 <div class="card-body pt-0">
+                    <div class="border-top text-center py-2">
+                        - SNSアカウントでログイン -
+                    </div>
                     <div class="row m-0">
-                        <div class="col-sm-6 pl-0 pr-2">
-                            <a class="btn btn-twitter d-block hover:text-white hover:opacity-80" href="/login/twitter">
-                                <i class="fab fa-twitter-square"></i>
-                                twitterでログイン
+                        <div class="col-sm-6 p-1">
+                            <a class="btn btn-google d-block hover:opacity-80" href="/login/google">
+                                <i class="fab fa-google"></i>
+                                google
                             </a>
+                            {{-- <a class="d-block hover:opacity-80" href="/login/google">
+                                <img src="/storage/btn_google_signin_light_normal_web.png" alt="" style="height: 37px; width: 100%;">
+                            </a> --}}
                         </div>
-                        <div class="col-sm-6 pr-0 pl-2">
+                        <div class="col-sm-6 p-1">
                             <a class="btn btn-facebook d-block hover:text-white hover:opacity-80" href="/login/facebook">
                                 <i class="fab fa-facebook-square"></i>
-                                facebookでログイン
+                                facebook
                             </a>
                         </div>
                     </div>
-                    <div class="row mx-0 pt-2">
-                        <div class="col-sm-6 pl-0 pr-2">
-                            <a class="btn btn-google d-block hover:opacity-80" href="/login/google">
-                                <i class="fab fa-google"></i>
-                                googleでログイン
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-1">
+                            <a class="btn btn-twitter d-block hover:text-white hover:opacity-80" href="/login/twitter">
+                                <i class="fab fa-twitter"></i>
+                                twitter
                             </a>
                         </div>
-                        <div class="col-sm-6 pr-0 pl-2">
+                        <div class="col-sm-6 p-1">
                             <a class="btn btn-github d-block hover:text-white hover:opacity-80" href="/login/github">
                                 <i class="fab fa-github"></i>
-                                githubでログイン
+                                github
                             </a>
                         </div>
                     </div>
