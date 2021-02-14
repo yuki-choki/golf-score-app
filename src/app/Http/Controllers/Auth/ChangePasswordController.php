@@ -13,10 +13,10 @@ class ChangePasswordController extends Controller
         $this->middleware('auth');
     }
     public function showChangePasswordForm()
-     {
-         return view('auth/passwords/change');
-     }
-     
+    {
+        return view('auth/passwords/change');
+    }
+    
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = Auth::user();
