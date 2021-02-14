@@ -55,14 +55,14 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            {{ Form::label('password-confirm', 'パスワード確認用', ['class' => 'mb-0']) }}
+                            {{ Form::label('password_confirmation', 'パスワード（確認用）', ['class' => 'mb-0']) }}
                             {{ Form::password(
-                                'password-confirm',
-                                $errors->has('password-confirm')
+                                'password_confirmation',
+                                $errors->has('password_confirmation')
                                     ? ['class' => 'form-control is-invalid', 'required']
                                     : ['class' => 'form-control', 'required'])
                             }}
-                            @error('password-confirm')
+                            @error('password_confirmation')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -79,13 +79,9 @@
                     </div>
                     <div class="row m-0">
                         <div class="col-sm-6 p-1">
-                            <a class="btn btn-google d-block hover:opacity-80" href="/login/google">
-                                <i class="fab fa-google"></i>
-                                google
+                            <a class="d-block hover:opacity-80" href="/login/google">
+                                <img src="{{ asset('images/btn_google_signin_light_normal_web.png') }}" alt="" style="height: 37px; width: 100%;">
                             </a>
-                            {{-- <a class="d-block hover:opacity-80" href="/login/google">
-                                <img src="/storage/btn_google_signin_light_normal_web.png" alt="" style="height: 37px; width: 100%;">
-                            </a> --}}
                         </div>
                         <div class="col-sm-6 p-1">
                             <a class="btn btn-facebook d-block hover:text-white hover:opacity-80" href="/login/facebook">

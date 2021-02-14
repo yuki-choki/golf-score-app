@@ -11,35 +11,25 @@
                 <div class="card-body pb-0">
                     <div>
                         {{ Form::open(['url' => route('login')]) }}
+                            @if ($errors->any())
+                                <div class="alert alert-danger p-2">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                {{ $error }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="form-group">
                                 {{ Form::label('email', 'メールアドレス', ['class' => 'mb-0']) }}
-                                {{ Form::text(
-                                    'email',
-                                    old('email'),
-                                    $errors->has('email')
-                                        ? ['class' => 'form-control is-invalid']
-                                        : ['class' => 'form-control'])
-                                }}
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                {{ Form::text('email', old('email'), ['class' => 'form-control'])}}
                             </div>
                             <div class="form-group">
                                 {{ Form::label('password', 'パスワード', ['class' => 'mb-0']) }}
-                                {{ Form::text(
-                                    'password',
-                                    old('password'),
-                                    $errors->has('password')
-                                        ? ['class' => 'form-control is-invalid']
-                                        : ['class' => 'form-control'])
-                                }}
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                {{ Form::password('password', ['class' => 'form-control'])}}
                             </div>
                             <div class="form-group">
                                 {{ Form::checkbox('remember', 'remember', false, [old('remember') ? 'checked' : '']) }}
@@ -53,7 +43,6 @@
                                     パスワードを忘れた場合
                                 </a>
                             @endif
-                        </form>
                         {{ Form::close() }}
                     </div>
                 </div>
@@ -63,13 +52,9 @@
                     </div>
                     <div class="row m-0">
                         <div class="col-sm-6 p-1">
-                            <a class="btn btn-google d-block hover:opacity-80" href="/login/google">
-                                <i class="fab fa-google"></i>
-                                google
+                            <a class="d-block hover:opacity-80" href="/login/google">
+                                <img src="{{ asset('images/btn_google_signin_light_normal_web.png') }}" alt="" style="height: 37px; width: 100%;">
                             </a>
-                            {{-- <a class="d-block hover:opacity-80" href="/login/google">
-                                <img src="/storage/btn_google_signin_light_normal_web.png" alt="" style="height: 37px; width: 100%;">
-                            </a> --}}
                         </div>
                         <div class="col-sm-6 p-1">
                             <a class="btn btn-facebook d-block hover:text-white hover:opacity-80" href="/login/facebook">
