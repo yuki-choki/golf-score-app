@@ -12,3 +12,12 @@ main .container,
 nav .container {
     max-width: 100%;
 }
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    background-color: #fff;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -2px;
+}

@@ -168,13 +168,26 @@ class ScoreController extends Controller
         $corse_lists = ['0' => '未選択'];
         $params = [];
         $games = [];
+        $putters = [
+            'zero_put' => 0,
+            'one_put' => 0,
+            'two_put' => 0,
+            'other' => 0
+        ];
+        $scores = [
+            'eagle' => 0,
+            'birdie' => 0,
+            'par' => 0,
+            'bogey' => 0,
+            'd_bogey' => 0,
+            'other' => 0
+        ];
         foreach ($my_games as $game) {
             $corse = $game['corse']->toArray();
             $corse_lists[$corse['id']] = $corse['name'];
         }
         if ($request->getMethod() === 'POST') {
             $params = $request->all();
-            unset($params['_token']);
             $games = Game::AnalysisSearch($params)->get();
             $games->load('score_cards');
             foreach ($games as $key => $game) {
@@ -182,9 +195,25 @@ class ScoreController extends Controller
                 $score_card = $game->score_cards->firstWhere('user_id', Auth::id());
                 $game->total_score = $score_card->getScoreCount('score');
                 $game->total_putter = $score_card->getScoreCount('putter');
+                $put_scores[] = $score_card->putterCount();
+                $score_type_tally[] = $score_card->scoreTypeTally();
+            }
+            foreach ($put_scores ?? [] as $put) {
+                $putters['zero_put'] += $put['zero_put'];
+                $putters['one_put'] += $put['one_put'];
+                $putters['two_put'] += $put['two_put'];
+                $putters['other'] += $put['other'];
+            }
+            foreach ($score_type_tally ?? [] as $score) {
+                $scores['eagle'] += $score['eagle'];
+                $scores['birdie'] += $score['birdie'];
+                $scores['par'] += $score['par'];
+                $scores['bogey'] += $score['bogey'];
+                $scores['d_bogey'] += $score['d_bogey'];
+                $scores['other'] += $score['other'];
             }
         }
-        return view('score.analysis', compact('corse_lists', 'params', 'games'));
+        return view('score.analysis', compact('corse_lists', 'params', 'games', 'putters', 'scores'));
     }
 
     private function createTableData($game)
