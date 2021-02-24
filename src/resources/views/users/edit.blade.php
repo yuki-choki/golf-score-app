@@ -28,7 +28,7 @@
                                     @if ($user->avatar)
                                         <img src="{{ $user->avatar }}" alt="" style="width: 150px; height: 150px;" class="rounded-circle cursor-pointer" id="user_img">
                                     @else
-                                        <img src="/storage/no-user-img.png" alt="" style="width: 150px; height: 150px;" class="cursor-pointer" id="user_img">
+                                        <img src="{{ asset('images/btn_google_signin_light_normal_web.png') }}" alt="" style="width: 150px; height: 150px;" class="cursor-pointer" id="user_img">
                                     @endif
                                 </label>
                                 {{ Form::file('avatar', ['class' => 'd-none', 'onchange' => 'changeImage(this)']) }}

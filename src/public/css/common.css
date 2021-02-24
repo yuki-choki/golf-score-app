@@ -21,3 +21,26 @@ nav .container {
 .nav-tabs .nav-item {
     margin-bottom: -2px;
 }
+.btn-twitter {
+    color: #fff;
+    background-color: #1DA1F2;
+    border-color: #1DA1F2;
+}
+.btn-facebook {
+    color: #fff;
+    background-color: #1877f2;
+    border-color: #1877f2;
+}
+.btn-google {
+    color: #212529;
+    background-color: #fff;
+    border-color: #212529;
+}
+.btn-google:hover {
+    border-color: #e5e5e5;
+}
+.btn-github {
+    color: #fff;
+    background-color: #171515;
+    border-color: #171515;
+}

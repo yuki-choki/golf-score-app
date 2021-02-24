@@ -1,76 +1,82 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 mt-3">
+<div class="container p-0">
+    <div class="w-full h-full bg-gray-50">
+        <div class="pt-5 m-auto" style="width: 410px;">
+            <div class="text-center">
+                <h3 class="h3">ログイン</h3>
+            </div>
             <div class="card">
-                <div class="card-header">ログイン</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">メールアドレス</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">パスワード</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        ログインを記憶する
-                                    </label>
+                <div class="card-body pb-0">
+                    <div>
+                        {{ Form::open(['url' => route('login')]) }}
+                            @if ($errors->any())
+                                <div class="alert alert-danger p-2">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                {{ $error }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
+                            @endif
+                            <div class="form-group">
+                                {{ Form::label('email', 'メールアドレス', ['class' => 'mb-0']) }}
+                                {{ Form::text('email', old('email'), ['class' => 'form-control'])}}
                             </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    ログイン
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        パスワードを忘れた場合
-                                    </a>
-                                @endif
+                            <div class="form-group">
+                                {{ Form::label('password', 'パスワード', ['class' => 'mb-0']) }}
+                                {{ Form::password('password', ['class' => 'form-control'])}}
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                {{ Form::checkbox('remember', 'remember', false, [old('remember') ? 'checked' : '']) }}
+                                {{ Form::label('remember', 'ログインを記憶する', ['class' => 'mb-0']) }}
+                            </div>
+                            <div class="form-group">
+                                {{ Form::submit('ログイン', ['class' => 'btn btn-success btn-lg btn-block']) }}
+                            </div>
+                            @if (Route::has('password.request'))
+                                <a class="btn btn-link pl-0 pt-0" href="{{ route('password.request') }}">
+                                    パスワードを忘れた場合
+                                </a>
+                            @endif
+                        {{ Form::close() }}
+                    </div>
                 </div>
-                <div class="card-body text-center">
-                    <a class="btn btn-primary" href="/login/twitter">twitter</a>
-                    <a class="btn btn-primary" href="/login/facebook">facebook</a>
-                    <a class="btn btn-primary" href="/login/google">google</a>
-                    <a class="btn btn-primary" href="/login/github">github</a>
+                <div class="card-body pt-0">
+                    <div class="border-top text-center py-2">
+                        - SNSアカウントでログイン -
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-1">
+                            <a class="d-block hover:opacity-80" href="/login/google">
+                                <img src="{{ asset('images/btn_google_signin_light_normal_web.png') }}" alt="" style="height: 37px; width: 100%;">
+                            </a>
+                        </div>
+                        <div class="col-sm-6 p-1">
+                            <a class="btn btn-facebook d-block hover:text-white hover:opacity-80" href="/login/facebook">
+                                <i class="fab fa-facebook-square"></i>
+                                facebook
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-1">
+                            <a class="btn btn-twitter d-block hover:text-white hover:opacity-80" href="/login/twitter">
+                                <i class="fab fa-twitter"></i>
+                                twitter
+                            </a>
+                        </div>
+                        <div class="col-sm-6 p-1">
+                            <a class="btn btn-github d-block hover:text-white hover:opacity-80" href="/login/github">
+                                <i class="fab fa-github"></i>
+                                github
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
