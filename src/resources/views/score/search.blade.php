@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-10 pt-3 bg-gray-50">
+        <div class="col pt-3 bg-gray-50">
             <h3 class="h3">ゴルフ場検索</h3>
             {{ Form::open(['method' => 'GET']) }}
             <div class="row">

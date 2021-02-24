@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         @include('components.user.sidebar')
-        <div class="col-md-10 pt-3 bg-gray-50">
+        <div class="col pt-3 bg-gray-50">
             <div class="pt-5 m-auto" style="width: 410px;">
                 <div class="text-center">
                     <h3 class="h3">パスワード変更</h3>

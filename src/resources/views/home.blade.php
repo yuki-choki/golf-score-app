@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             @include('components.main.sidebar')
-            <div class="col-md-10 pt-3 bg-gray-50">
+            <div class="col pt-3 bg-gray-50">
                 <h1 class="h3">ラウンド記録</h1>
                 <div class="card">
                     <div class="card-body">
