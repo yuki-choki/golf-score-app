@@ -36,3 +36,9 @@ nav .container {
     background-color: #171515;
     border-color: #171515;
 }
+.nav-tabs .nav-item {
+    margin-bottom: -2px;
+}
+.side-bar {
+    width: 230px;
+}

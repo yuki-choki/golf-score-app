@@ -1,4 +1,4 @@
-<div class="col-md-2 side-bar p-0">
+<div class="side-bar p-0">
     <a class="hover:no-underline" href="{{ route('home') }}">
         <div class="side-bar-item d-flex p-3 hover:bg-base-dark hover:text-white">
             <div class="col-2 text-center p-0"><i class="fas fa-home fa-lg leading-6"></i></div>

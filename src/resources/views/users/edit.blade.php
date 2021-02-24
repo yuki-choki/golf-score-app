@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             @include('components.user.sidebar')
-            <div class="col-md-10 pt-3 bg-gray-50">
+            <div class="col pt-3 bg-gray-50">
                 <h3 class="h3">プロフィール編集</h3>
                 <div class="card">
                     {{ Form::open(['url' => 'users/update', 'files' => true]) }}
