@@ -37,4 +37,72 @@ class ScoreCard extends Model
 
         return $halfCount;
     }
+
+    // パター数別の集計処理
+    public function putterCount()
+    {
+        $rtn = [
+            'zero_put' => 0,
+            'one_put' => 0,
+            'two_put' => 0,
+            'other' => 0
+        ];
+        for ($i = 1; $i < 19; $i++) {
+            $column_name = 'putter_' . $i;
+            switch ($this->{$column_name}) {
+                case (0):
+                    $rtn['zero_put']++;
+                    break;
+                case (1):
+                    $rtn['one_put']++;
+                    break;
+                case (2):
+                    $rtn['two_put']++;
+                    break;
+                default:
+                    $rtn['other']++;
+            }
+        }
+
+        return $rtn;
+    }
+
+    // スコア別の集計処理
+    public function scoreTypeTally()
+    {
+        $rtn = [
+            'eagle' => 0,
+            'birdie' => 0,
+            'par' => 0,
+            'bogey' => 0,
+            'd_bogey' => 0,
+            'other' => 0
+        ];
+        for ($i = 1; $i < 19; $i++) {
+            $par_column = 'par_' . $i;
+            $score_column = 'score_' . $i;
+            switch ($this->{$score_column} - $this->{$par_column}) {
+                case (-2):
+                    $rtn['eagle']++;
+                    break;
+                case (-1):
+                    $rtn['birdie']++;
+                    break;
+                case (0):
+                    $rtn['par']++;
+                    break;
+                case (1):
+                    $rtn['bogey']++;
+                    break;
+                case (2):
+                    $rtn['d_bogey']++;
+                    break;
+                default:
+                    $rtn['other']++;
+                    break;
+            }
+        }
+
+        return $rtn;
+    }
 }
