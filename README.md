@@ -1,3 +1,9 @@
+<p align="center">
+    <a href="#">
+        <img src="https://user-images.githubusercontent.com/57939267/109434955-181b7f80-7a5b-11eb-9905-475d07ae000c.png" width="300">
+    </a>
+</p>
+
 ## GSO (Golf Score OCR)とは
 ゴルフスコアをWeb上で管理出来るアプリです。<br>
 スコアカードの画像を読み取り、Web上で閲覧、修正が可能です。<br>
