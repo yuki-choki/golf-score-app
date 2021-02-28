@@ -32,6 +32,8 @@
 
     <!-- フラッシュメッセージ用 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+
+    <link rel="icon" href="{{ asset('images/logo.png') }}" />
 </head>
 <body>
     <div id="app" class="vh-100">
