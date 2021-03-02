@@ -92,7 +92,7 @@ class ScoreController extends Controller
      */
     public function show($id)
     {
-        $game = Game::find($id)->first();
+        $game = Game::find($id);
         $names = $this->getPlayerName($game);
         $rows = $this->createTableData($game);
 
@@ -107,7 +107,7 @@ class ScoreController extends Controller
      */
     public function edit($id)
     {
-        $game = Game::find($id)->first();
+        $game = Game::find($id);
         $names = $this->getPlayerName($game);
         $rows = $this->createTableData($game);
 
@@ -224,8 +224,8 @@ class ScoreController extends Controller
             for ($i = 1; $i < 22; $i++) {
                 switch ($i) {
                     case (config('golf_role.BEFORE_HALF_NUM')):
-                        if ($index < 1) {
-                            $res['b_half'][$score->id] = $score->getHalfScoreCount('par', 'out') . ' / ' . $score->getHalfScoreCount('yard', 'out');
+                        if ($score->user_id !== null) {
+                            $res['b_half']['setting'] = $score->getHalfScoreCount('par', 'out') . ' / ' . $score->getHalfScoreCount('yard', 'out');
                             $res['b_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'out');
                             $res['b_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'out');
                         } else {
@@ -233,8 +233,8 @@ class ScoreController extends Controller
                         }
                         break;
                     case (config('golf_role.AFTER_HALF_NUM')):
-                        if ($index < 1) {
-                            $res['a_half'][$score->id] = $score->getHalfScoreCount('par', 'in') . ' / ' . $score->getHalfScoreCount('yard', 'in');
+                        if ($score->user_id !== null) {
+                            $res['a_half']['setting'] = $score->getHalfScoreCount('par', 'in') . ' / ' . $score->getHalfScoreCount('yard', 'in');
                             $res['a_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'in');
                             $res['a_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'in');
                         } else {
@@ -242,8 +242,8 @@ class ScoreController extends Controller
                         }
                         break;
                     case (config('golf_role.TOTAL_NUM')):
-                        if ($index < 1) {
-                            $res['total'][$score->id] = $score->getScoreCount('par') . ' / ' . $score->getScoreCount('yard');
+                        if ($score->user_id !== null) {
+                            $res['total']['setting'] = $score->getScoreCount('par') . ' / ' . $score->getScoreCount('yard');
                             $res['total']['score'][$score->id]['score'] = $score->getScoreCount('score');
                             $res['total']['score'][$score->id]['putter'] =  $score->getScoreCount('putter');
                         } else {
@@ -252,8 +252,8 @@ class ScoreController extends Controller
                         break;
                     default:
                         $row_num = ($i > 10) ? $i - 1 : $i; // Holeが10以上になるとforのindexHole数がズレるためindexから1をマイナス
-                        if ($index < 1) {
-                            $res[$row_num][$score->id] = $score->{'par_' . $row_num} . ' / ' . $score->{'yard_' . $row_num};
+                        if ($score->user_id !== null) {
+                            $res[$row_num]['setting'] = $score->{'par_' . $row_num} . ' / ' . $score->{'yard_' . $row_num};
                             $res[$row_num]['score'][$score->id]['score'] = $score->{'score_' . $row_num};
                             $res[$row_num]['score'][$score->id]['putter'] = $score->{'putter_' . $row_num};
                         } else {

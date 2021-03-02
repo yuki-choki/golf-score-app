@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-10 py-3 bg-gray-50">
+        <div class="col py-3 bg-gray-50">
             <h3 class="h3">スコア詳細</h3>
             <div class="card">
                 <div class="card-body">
@@ -26,7 +26,7 @@
                                 @foreach ($rows as $row_num => $row)
                                     <tr>
                                         @foreach ($row as $key => $val)
-                                            @if ($key === 4)
+                                            @if ($key === 'setting')
                                                 <th class="bg-light" width="10%">
                                                     @switch($row_num)
                                                         @case('b_half')

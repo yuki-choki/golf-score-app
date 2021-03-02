@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
-        <div class="col-md-10 py-3 bg-gray-50">
+        <div class="col py-3 bg-gray-50">
             <h5 class="h5">スコア詳細</h5>
             <div class="card">
                 <div class="card-body">
@@ -28,7 +28,7 @@
                                 @foreach ($rows as $row_num => $row)
                                     <tr>
                                         @foreach ($row as $key => $val)
-                                            @if ($key == '4')
+                                            @if ($key === 'setting')
                                                 <th class="bg-light" width="10%">
                                                     @switch($row_num)
                                                         @case('b_half')
@@ -66,7 +66,7 @@
                                                             </div>
                                                         </td>
                                                     @else
-                                                        @if ($key == '4')
+                                                        @if ($key == 'setting')
                                                             <td width="14%">{{ $val }}</td>
                                                         @else
                                                             <td width="14%">{{ Form::number('score['. $row_num . ']['. $key . ']', $val, ['class' => 'form-control form-control-sm', 'min' => 0]) }}</td>
