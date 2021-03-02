@@ -15,8 +15,8 @@ class CreateGamesTable extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('corse_id')->constrained('corses');
+            $table->integer('user_id');
+            $table->integer('corse_id');
             $table->date('date');
             $table->text('memo')->nullable();
             $table->string('weather', 50);
@@ -24,6 +24,11 @@ class CreateGamesTable extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->default(DB::raw('NULL on update CURRENT_TIMESTAMP'));
             $table->tinyInteger('delete_flg')->default(0);
+        });
+
+        Schema::table('posts', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('corse_id')->constrained('corses');
         });
     }
 
