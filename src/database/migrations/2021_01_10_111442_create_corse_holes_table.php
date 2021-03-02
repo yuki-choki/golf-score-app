@@ -15,7 +15,7 @@ class CreateCorseHolesTable extends Migration
     {
         Schema::create('corse_holes', function (Blueprint $table) {
             $table->id();
-            $table->integer('corse_id');
+            $table->unsignedBigInteger('corse_id');
             $table->string('hole', 10);
             $table->integer('back')->nullable();
             $table->integer('regular')->nullable();
@@ -28,10 +28,6 @@ class CreateCorseHolesTable extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->default(DB::raw('NULL on update CURRENT_TIMESTAMP'));
             $table->tinyInteger('delete_flg')->default(0);
-        });
-
-        Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('corse_id')->constrained('corses');
         });
     }
 

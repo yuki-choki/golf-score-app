@@ -15,8 +15,8 @@ class CreateScoreCardsTable extends Migration
     {
         Schema::create('score_cards', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->nullable();
-            $table->integer('game_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('game_id');
             $table->string('player_name');
             $table->integer('score_1')->nullable();
             $table->integer('score_2')->nullable();
@@ -94,11 +94,6 @@ class CreateScoreCardsTable extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->default(DB::raw('NULL on update CURRENT_TIMESTAMP'));
             $table->tinyInteger('delete_flg')->default(0);
-        });
-
-        Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('game_id')->constrained('games');
         });
     }
 
