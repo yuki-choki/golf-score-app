@@ -15,7 +15,7 @@ class CreateCorseHolesTable extends Migration
     {
         Schema::create('corse_holes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('corse_id')->constrained('corses');
+            $table->unsignedBigInteger('corse_id');
             $table->string('hole', 10);
             $table->integer('back')->nullable();
             $table->integer('regular')->nullable();

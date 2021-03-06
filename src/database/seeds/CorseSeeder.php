@@ -35,12 +35,8 @@ class CorseSeeder extends Seeder
                         $data['name'] = $corse['Item']['golfCourseName'];
                         $data['address'] = $corse['Item']['address'];
                         $data['pref_code'] = $prefCode;
-                        DB::table('corses')->insert([
-                            'name' => $corse['Item']['golfCourseName'],
-                            'address' => $corse['Item']['address'],
-                            'pref_code' => $prefCode,
-                            'update_job' => 'CorseSeeder',
-                        ]);
+                        $data['update_job'] = 'CorseSeeder';
+                        DB::table('corses')->insert($data);
                     }
                 } else {
                     // too_many_requests エラーが発生した時は 3 秒待ってから再度処理を行う
@@ -54,24 +50,5 @@ class CorseSeeder extends Seeder
                 }
             }
         }
-        // 検証のために使用
-        // $client = new RakutenRws_Client();
-        // // アプリID (デベロッパーID) をセット
-        // $client->setApplicationId(env('RAKUTEN_APPLICATION_ID', false));
-        // // ゴルフ情報取得
-        // $response = $client->execute('GoraGoraGolfCourseSearch', [
-        //     'areaCode' => 1,
-        //     // 'page' => 1
-        // ]);
-        // if ($response->isOk()) {
-            // DB::table('corses')->insert([
-            //     'name' => $response->getData()['Items'][0]['Item']['golfCourseName'],
-            //     'address' => $response->getData()['Items'][0]['Item']['address'],
-            //     'pref_code' => 1,
-            //     'update_job' => 'CorseSeeder',
-            // ]);
-        // } else {
-            // echo 'Error:'.$response->getMessage();
-        // }
     }
 }

@@ -15,8 +15,8 @@ class CreateGamesTable extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('corse_id')->constrained('corses');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('corse_id');
             $table->date('date');
             $table->text('memo')->nullable();
             $table->string('weather', 50);
