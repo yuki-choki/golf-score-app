@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'ゲスト',
             'email' => 'guest@gmail.com',
+            'update_job' => 'UserSeeder'
         ]);
     }
 }
