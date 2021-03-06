@@ -19,7 +19,7 @@ class ScoreCardSeeder extends Seeder
             for ($g_s = 0; $g_s < 3; $g_s++) {
                 $key = $i . '-' . $g_s;
                 $params[$key]['player_name'] = $key . 'さん';
-                $params[$key]['user_id'] = ($g_s === 0) ? 2 : null;
+                $params[$key]['user_id'] = ($g_s === 0) ? 1 : null;
                 $params[$key]['game_id'] = $i;
                 $params[$key]['update_job'] = 'gameSeeder';
                 // 各数値を18ホール分作成
