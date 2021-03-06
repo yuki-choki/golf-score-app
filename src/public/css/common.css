@@ -50,3 +50,7 @@ nav .container {
 .side-bar {
     width: 230px;
 }
+.col.pt-3.bg-gray-50,
+.col.py-3.bg-gray-50 {
+    width: calc(100% - 230px);
+}
