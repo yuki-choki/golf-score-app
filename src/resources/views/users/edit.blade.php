@@ -16,12 +16,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            {{ Form::label('email', 'メールアドレス', ['class' => 'col-md-4 col-form-label text-md-right']) }}
-                            <div class="col-md-6">
-                                {{ Form::text('email', $user->email, ['class' => 'form-control']) }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             {{ Form::label('avatar', 'プロフィール写真', ['class' => 'col-md-4 col-form-label text-md-right']) }}
                             <div class="col-md-6">
                                 <label for="avatar">
