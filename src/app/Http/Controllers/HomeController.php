@@ -65,6 +65,9 @@ class HomeController extends Controller
             $record['best'] .= ' (' . $record['best_date'] . ')';
             $record['worst'] .= ' (' . $record['worst_date'] . ')';
         }
+        if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'password/reset') !== false) {
+            session()->flash('msg_success', 'パスワードをリセットしました');
+        }
         return view('home', compact('chart_data', 'average', 'record'));
     }
 }

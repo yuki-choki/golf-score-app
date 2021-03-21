@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/users', 'UsersController@index')->name('users');
 Route::get('/users/edit/', 'UsersController@edit')->name('users.edit');
