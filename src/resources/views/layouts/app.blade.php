@@ -71,6 +71,8 @@
                                 </a>
                                 @if (Auth::user()->avatar)
                                     <img src="{{ Auth::user()->avatar }}" alt="ユーザimg" class="rounded-circle my-auto" style="height: 30px; width: 30px;">
+                                @else
+                                    <img src="{{ asset('images/no-user-img.png') }}" alt="ユーザimg" class="rounded-circle my-auto" style="height: 30px; width: 30px;">
                                 @endif
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
