@@ -22,7 +22,10 @@ class UsersController extends Controller
     public function edit(Request $request)
     {
         $user = Auth::user();
-
+        if ($user->isGuest()) {
+            session()->flash('msg_error', 'ゲストログインのためプロフィール編集出来ません');
+            return redirect('/');
+        }
         return view('users.edit', compact('user'));
     }
 
