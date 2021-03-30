@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Rules\AlphaNumHalf;
 
 class ChangePasswordRequest extends FormRequest
 {
@@ -28,8 +29,8 @@ class ChangePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'current_password' => ['required', 'string', 'min:8'],
-            'password' => ['required', 'string', 'min:8', 'confirmed']
+            'current_password' => ['required',  new AlphaNumHalf, 'min:8'],
+            'password' => ['required',  new AlphaNumHalf, 'min:8', 'confirmed']
         ];
     }
 
