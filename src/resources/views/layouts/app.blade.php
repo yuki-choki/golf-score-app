@@ -64,6 +64,9 @@
                                     <a class="nav-link hover:text-base-dark" href="{{ route('register') }}">新規登録</a>
                                 </li>
                             @endif
+                            <li class="nav-item">
+                                <a class="nav-link hover:text-base-dark" href="{{ route('login.guest') }}">ゲストログイン</a>
+                            </li>
                         @else
                             <li class="nav-item dropdown d-flex">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle hover:text-gray-500" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -76,8 +79,9 @@
                                 @endif
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();"
+                                    >
                                         <i class="fas fa-sign-out-alt mr-2"></i>ログアウト
                                     </a>
                                     <a href="{{ route('users') }}" class="dropdown-item"><i class="far fa-id-card mr-2"></i>マイページ</a>
@@ -104,9 +108,9 @@
             toastr.success('{{ session('msg_success') }}');
         });
     @endif
-    @if (session('msg_danger'))
+    @if (session('msg_error'))
         $(function () {
-            toastr.error('{{ session('msg_danger') }}');
+            toastr.error('{{ session('msg_error') }}');
         });
     @endif
 </script>

@@ -14,6 +14,11 @@ class ChangePasswordController extends Controller
     }
     public function showChangePasswordForm()
     {
+        $user = Auth::user();
+        if ($user->isGuest()) {
+            session()->flash('msg_error', 'ゲストログインのためパスワード変更出来ません');
+            return redirect('/');
+        }
         return view('auth/passwords/change');
     }
     

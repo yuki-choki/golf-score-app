@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\DB;
 use Socialite;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -100,5 +101,23 @@ class LoginController extends Controller
         auth()->login($user, true);
         session()->flash('msg_success', 'ログインしました');
         return redirect()->to('/home');
+    }
+
+    /**
+     * ゲストログイン機能
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function guestLogin()
+    {
+        $email = 'guest@gmail.com';
+        $password = 'password';
+        if (Auth::attempt(compact('email', 'password'))) {
+            session()->flash('msg_success', 'ゲストでログインしました');
+            return redirect('/');
+        }
+
+        session()->flash('msg_error', 'ゲストログインに失敗しました');
+        return redirect('/');
     }
 }
