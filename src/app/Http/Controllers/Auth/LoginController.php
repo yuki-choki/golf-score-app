@@ -50,11 +50,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($social)
     {
-        if ($social !== 'guest') {
-            return Socialite::driver($social)->redirect();
-        } else {
-            return $this->guestLogin();
-        }
+        return Socialite::driver($social)->redirect();
     }
 
     /**

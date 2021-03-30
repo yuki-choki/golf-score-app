@@ -36,4 +36,4 @@ Route::post('/scores/analysis', 'ScoreController@analysis')->name('scores.analys
 Route::resources([
     'scores' => 'ScoreController'
 ]);
-Route::get('/login/guest', 'Auth\LoginController@guestLogin')->name('login.guest');
+Route::get('/login-guest', 'Auth\LoginController@guestLogin')->name('login.guest');
