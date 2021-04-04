@@ -12,10 +12,10 @@
                     <div>
                         {{ Form::hidden('corse_id', $corse['id']) }}
                     </div>
-                    <upload-component
+                    <dropzone-component
                         :corse="{{ json_encode($corse) }}"
                     >
-                    </upload-component>
+                    </dropzone-component>
                     <div class="col-12 my-3">
                         {{ Form::submit('読込開始', ['class' => 'btn btn-success']) }}
                     </div>
