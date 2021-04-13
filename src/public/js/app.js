@@ -1976,17 +1976,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {},
   props: {
-    corse: {}
+    corse: {},
+    maxSize: {}
   },
   data: function data() {
     return {
       isEnter: false,
       isDrop: false,
       file: null,
-      preview: ''
+      preview: '',
+      imageError: false,
+      errorMessage: '',
+      disabled: true,
+      buttonClass: 'btn btn-secondary'
     };
   },
   methods: {
@@ -1995,6 +2009,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     dragLeave: function dragLeave() {
       this.isEnter = false;
+    },
+    imageValidation: function imageValidation(img) {
+      if (img.size > this.maxSize) {
+        this.imageError = true;
+        this.errorMessage = 'アップロード出来る画像サイズは 2MB 以下です';
+        return false;
+      }
+
+      if (img.type !== 'image/png') {
+        this.imageError = true;
+        this.errorMessage = '画像形式は .png でアップロードして下さい';
+        return false;
+      }
+
+      return true;
     },
     // 通常、ファイルをドロップしたときにはブラウザがドロップされた画像を表示するような動きをするが、
     // @drop.preventとすることでその機能を止めている。
@@ -2005,6 +2034,14 @@ __webpack_require__.r(__webpack_exports__);
       this.file = files[0];
       this.isEnter = false;
       this.isDrop = true;
+
+      if (!this.imageValidation(this.file)) {
+        this.disabled = true;
+        this.preview = '/images/upload_file_error.png';
+        this.buttonClass = 'btn btn-secondary';
+        return;
+      }
+
       var reader = new FileReader();
 
       reader.onload = function (e) {
@@ -2013,10 +2050,10 @@ __webpack_require__.r(__webpack_exports__);
 
       reader.readAsDataURL(this.file);
       document.getElementById("upload_image").files = files;
-    },
-    resetImage: function resetImage() {
-      this.file = null;
-      this.dataUrl = null;
+      this.imageError = false;
+      this.errorMessage = '';
+      this.disabled = false;
+      this.buttonClass = 'btn btn-success';
     }
   }
 });
@@ -38298,22 +38335,30 @@ var render = function() {
               ])
             : _vm._e()
         ]
-      )
+      ),
+      _vm._v(" "),
+      _vm.imageError
+        ? _c("p", [
+            _c("span", { staticStyle: { color: "red" } }, [
+              _vm._v(_vm._s(_vm.errorMessage))
+            ])
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
-    _vm._m(0)
+    _c("div", { staticClass: "col-12 my-3" }, [
+      _c(
+        "button",
+        {
+          class: _vm.buttonClass,
+          attrs: { type: "submit", disabled: _vm.disabled }
+        },
+        [_vm._v("読込開始")]
+      )
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "new-preview-item" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
