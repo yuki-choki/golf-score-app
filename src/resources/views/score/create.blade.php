@@ -14,11 +14,9 @@
                     </div>
                     <dropzone-component
                         :corse="{{ json_encode($corse) }}"
+                        :max-size="{{ json_encode((string)$maxSize) }}"
                     >
                     </dropzone-component>
-                    <div class="col-12 my-3">
-                        {{ Form::submit('読込開始', ['class' => 'btn btn-success']) }}
-                    </div>
                 </div>
                 {{ Form::close() }}
             </div>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ScoreController extends Controller
 {
+    const MAX_FILE_SIZE = 2; // MB
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -58,13 +60,14 @@ class ScoreController extends Controller
     public function create(Request $request)
     {
         $corse = [];
+        $maxSize = self::MAX_FILE_SIZE * (1024 * 1024);
         if ($request->method() === 'POST') {
             $params = $request->all();
             unset($params['_token']);
             $corse = Corse::find($params['pref_id']);
         }
         
-        return view('score.create', compact('corse', 'params', 'request'));
+        return view('score.create', compact('corse', 'params', 'request', 'maxSize'));
     }
 
     /**
