@@ -23,7 +23,7 @@
             </p>
         </div>
         <div class="col-12 my-3">
-            <button type="submit" :class="buttonClass" :disabled="disabled">読込開始</button>
+            <button type="button" :class="buttonClass" :disabled="disabled" data-toggle="modal" data-target="#previewModal" id="image-select-btn">決定</button>
         </div>
     </div>
 </template>

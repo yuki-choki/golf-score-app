@@ -38351,9 +38351,15 @@ var render = function() {
         "button",
         {
           class: _vm.buttonClass,
-          attrs: { type: "submit", disabled: _vm.disabled }
+          attrs: {
+            type: "button",
+            disabled: _vm.disabled,
+            "data-toggle": "modal",
+            "data-target": "#previewModal",
+            id: "image-select-btn"
+          }
         },
-        [_vm._v("読込開始")]
+        [_vm._v("決定")]
       )
     ])
   ])
