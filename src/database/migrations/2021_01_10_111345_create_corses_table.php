@@ -17,6 +17,7 @@ class CreateCorsesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
+            $table->string('course_name');
             $table->integer('pref_code');
             $table->string('update_job', 50);
             $table->dateTime('created_at')->useCurrent();
