@@ -30,10 +30,22 @@ class CorseSeeder extends Seeder
                 if ($response->isOk()) {
                     $corseDataArr = $response->getData()['Items'];
                     foreach ($corseDataArr as $corse) {
-                        // データ保存処理
+                        usleep(300000); // 0.3秒間隔で処理を実行
+                        $detail = $client->execute('GoraGoraGolfCourseDetail', [
+                            'golfCourseId' => $corse['Item']['golfCourseId'],
+                        ]);
+                        // 「too_many_requests ~」のエラーが出た場合は 3秒待って再度実行
+                        if (strpos($detail->getMessage(), 'too_many_requests') !== false) {
+                            sleep(3);
+                            $detail = $client->execute('GoraGoraGolfCourseDetail', [
+                                'golfCourseId' => $corse['Item']['golfCourseId'],
+                            ]);
+                        }
+                        $courseName = explode('・', $detail->getData()['Item']['courseName']);
                         $data = [];
                         $data['name'] = $corse['Item']['golfCourseName'];
                         $data['address'] = $corse['Item']['address'];
+                        $data['course_name'] = json_encode($courseName, JSON_UNESCAPED_UNICODE);
                         $data['pref_code'] = $prefCode;
                         $data['update_job'] = 'CorseSeeder';
                         DB::table('corses')->insert($data);

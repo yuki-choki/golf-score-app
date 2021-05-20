@@ -19,5 +19,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'update_job' => 'UserSeeder'
         ]);
+        DB::table('users')->insert([
+            'name' => '同伴者A',
+            'parent_user_id' => 1,
+            'update_job' => 'UserSeeder'
+            ]);
+        DB::table('users')->insert([
+            'name' => '同伴者B',
+            'parent_user_id' => 1,
+            'update_job' => 'UserSeeder'
+        ]);
     }
 }

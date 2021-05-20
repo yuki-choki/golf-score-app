@@ -7,9 +7,12 @@ use App\Game;
 use App\Corse;
 use App\ScoreCard;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ScoreController extends Controller
 {
+    const MAX_FILE_SIZE = 2; // MB
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -58,13 +61,16 @@ class ScoreController extends Controller
     public function create(Request $request)
     {
         $corse = [];
+        $maxSize = self::MAX_FILE_SIZE * (1024 * 1024);
         if ($request->method() === 'POST') {
             $params = $request->all();
             unset($params['_token']);
             $corse = Corse::find($params['pref_id']);
+        } else {
+            return redirect()->route('scores.search');
         }
         
-        return view('score.create', compact('corse', 'params', 'request'));
+        return view('score.create', compact('corse', 'params', 'request', 'maxSize'));
     }
 
     /**
@@ -76,11 +82,12 @@ class ScoreController extends Controller
     public function store(Request $request)
     {
         if ($request->getMethod() === 'POST') {
-            $params = $request->all();
-            // post されてきたデータをbase64エンコードする
-            $base64_file = base64_encode($params['file']->path());
-            // OCR 読み込み処理を記述
-            return $base64_file; // 動作確認としてbase64エンコードしたデータを返す
+            $base64_image = $request->input('image');
+            $now = date('Y_m_d_H_i_s');
+            $fileName = Auth::id() . '_' . $now . '.png';
+            // 保存先を S3 に変更
+            Storage::disk('local')->put('public/' . $fileName, $base64_image);
+            // エラーハンドリング処理記述
         }
     }
 
