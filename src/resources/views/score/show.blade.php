@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+<style>
+    #score-show-table tr th,
+    #score-show-table tr td {
+        vertical-align: inherit;
+    }
+</style>
 @section('content')
 <div class="container">
     <div class="row">
@@ -9,70 +15,73 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-12">
                             <h5 class="h5">{{ $game->corse->name }}</h5>
                             <h5 class="h5">
                                 {{ date('Y年m月d日', strtotime($game->date)) . '　' . $game->weather}}
-                                <span class="float-right"><a href={{ action('ScoreController@edit', $game->id) }}><i class="fas fa-edit text-success"></i></a></span>
+                                <span class="ml-3"><a href={{ action('ScoreController@edit', $game->id) }}><i class="fas fa-edit text-success"></i></a></span>
                             </h5>
-                            <table class="table text-center table-bordered lead">
-                                <tr>
-                                    <th class="bg-light" width="10%">Hole</th>
-                                    <td width="14%">Par / Yard</td>
-                                    @foreach ($names as $name)
-                                        <td width="14%">{{ $name }}</td>
-                                    @endforeach
-                                </tr>
-                                @foreach ($rows as $row_num => $row)
-                                    <tr>
-                                        @foreach ($row as $key => $val)
-                                            @if ($key === 'setting')
-                                                <th class="bg-light" width="10%">
-                                                    @switch($row_num)
-                                                        @case('b_half')
-                                                            Out
-                                                            @break
-                                                        @case('a_half')
-                                                            In
-                                                            @break
-                                                        @case('total')
-                                                            Total
-                                                            @break
-                                                        @default
-                                                            {{ $row_num }}
-                                                    @endswitch
-                                                </th>
-                                            @endif
-                                            @switch($row_num)
-                                                @case('b_half')
-                                                @case('a_half')
-                                                @case('total')
-                                                    @if (is_array($val))
-                                                        <td class="bg-light" width="14%">
-                                                            <span class="mr-1">{{ $val[array_key_first($val)]['score'] }}</span><span>({{ $val[array_key_first($val)]['putter'] }})</span>
-                                                        </td>
-                                                    @else
-                                                        <td class="bg-light" width="14%">{{ $val }}</td>
-                                                    @endif
-                                                    @break
-                                                @default
-                                                    @if (is_array($val))
-                                                        <td width="14%">
-                                                            <span class="mr-1">{{ $val[array_key_first($val)]['score'] }}</span><span>({{ $val[array_key_first($val)]['putter'] }})</span>
-                                                        </td>
-                                                    @else
-                                                        <td width="14%">{{ $val }}</td>
-                                                    @endif
-                                            @endswitch
-                                        @endforeach
+                            @foreach ($round as $halfType => $halfData)
+                                <h5 class="h5 mt-3" id="first-half-course">
+                                    {{ $halfData['course'] }}
+                                </h5>
+                                <table class="table text-center table-bordered" id="score-show-table" style="max-width: 800px;">
+                                    <tr class="bg-base-dark text-white">
+                                        <th>Hole</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>{{ $halfType === 'first' ? '前半' : '後半' }}</th><th>合計</th>
                                     </tr>
-                                @endforeach
-                            </table>
+                                    <tr>
+                                        <td>Par</td>
+                                        @foreach ($halfData['par'] as $par)
+                                            <td>{{ $par }}</td>
+                                        @endforeach
+                                        <td>{{ $halfData['total']['par'] }}</td>
+                                        <td>{{ $total['setting']['par'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Yard</td>
+                                        @foreach ($halfData['yard'] as $yard)
+                                            <td>{{ $yard }}</td>
+                                        @endforeach
+                                        <td>{{ $halfData['total']['yard'] }}</td>
+                                        <td>{{ $total['setting']['yard'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 700;">
+                                            {{ $halfData['owner']['player_name'] . '(Score)' }}
+                                        </td>
+                                        @foreach ($halfData['owner']['score'] as $score)
+                                            <td style="font-weight: 700;">{{ $score }}</td>
+                                        @endforeach
+                                        <td style="font-weight: 700;">{{ $halfData['owner']['total']['score'] }}</td>
+                                        <td style="font-weight: 700;">{{ $total['owner']['score'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 700;">
+                                            {{ $halfData['owner']['player_name'] . '(Putt)' }}
+                                        </td>
+                                        @foreach ($halfData['owner']['putter'] as $putter)
+                                            <td style="font-weight: 700;">{{ $putter }}</td>
+                                        @endforeach
+                                        <td style="font-weight: 700;">{{ $halfData['owner']['total']['putter'] }}</td>
+                                        <td style="font-weight: 700;">{{ $total['owner']['putter'] }}</td>
+                                    </tr>
+                                    @foreach ($halfData['companion'] as $id => $companion)
+                                        <tr>
+                                            @foreach ($companion as $key => $data)
+                                                @if ($key < 11)
+                                                    <td style="font-weight: 700;">{{ $data }}</td>
+                                                @else
+                                                    <td style="font-weight: 700;">{{ $total[$data] }}</td>
+                                                @endif
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            @endforeach
                         </div>
-                        <div class="col-md-5 pl-0">
-                            <h5 class="h5">&nbsp;</h5>
-                            <h5 class="h5">memo</h5>
-                            <div class="card game-note-container">
+                        <div class="col-12">
+                            <h5 class="h5 mt-3">memo</h5>
+                            <div class="card game-note-container"  style="max-width: 800px;">
                                 <div class="card-body">
                                     {!! nl2br(e($game->memo)) !!}
                                 </div>

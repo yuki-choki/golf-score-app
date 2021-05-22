@@ -40,9 +40,13 @@ class HomeController extends Controller
         ];
         foreach ($games as $key => $game) {
             // 対象ゲームのユーザーのスコアを取得する
-            $score_card = $game->score_cards->firstWhere('user_id', Auth::id());
-            $game->total_score = $score_card->getScoreCount('score');
-            $game->total_putter = $score_card->getScoreCount('putter');
+            $score_cards = $game->score_cards->where('user_id', Auth::id());
+            $game->total_score = 0;
+            $game->total_putter = 0;
+            foreach ($score_cards as $score_card) {
+                $game->total_score += $score_card->getScoreCount('score');
+                $game->total_putter += $score_card->getScoreCount('putter');
+            }
             $chart_data[] = [date("'y n/d", strtotime($game->date)), $game->total_score, $game->total_putter];
             // 平均スコア取得
             $average['score'] += $game->total_score;

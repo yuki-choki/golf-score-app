@@ -29,9 +29,13 @@ class ScoreController extends Controller
         $games->load('score_cards');
         foreach ($games as $key => $game) {
             //対象ゲームのユーザーのスコアを取得する
-            $score_card = $game->score_cards->firstWhere('user_id', Auth::id());
-            $game->total_score = $score_card->getScoreCount('score');
-            $game->total_putter = $score_card->getScoreCount('putter');
+            $score_cards = $game->score_cards->where('user_id', Auth::id());
+            $game->total_score = 0;
+            $game->total_putter = 0;
+            foreach ($score_cards as $score_card) {
+                $game->total_score += $score_card->getScoreCount('score');
+                $game->total_putter += $score_card->getScoreCount('putter');
+            }
         }
 
         return view('score.index', compact('games'));
@@ -101,9 +105,10 @@ class ScoreController extends Controller
     {
         $game = Game::find($id);
         $names = $this->getPlayerName($game);
-        $rows = $this->createTableData($game);
+        $round = $this->createScoreTable($game);
+        $total = $this->getTotalScore($game);
 
-        return view('score.show', compact('game', 'rows', 'names'));
+        return view('score.show', compact('game', 'round', 'names', 'total'));
     }
 
     /**
@@ -116,9 +121,10 @@ class ScoreController extends Controller
     {
         $game = Game::find($id);
         $names = $this->getPlayerName($game);
-        $rows = $this->createTableData($game);
+        $round = $this->createScoreTable($game);
+        $total = $this->getTotalScore($game);
 
-        return view('score.edit', compact('game', 'names', 'rows'));
+        return view('score.edit', compact('game', 'names', 'round', 'total'));
     }
 
     /**
@@ -133,21 +139,9 @@ class ScoreController extends Controller
         $game = Game::find($id);
         $params = $request->all();
         unset($params['_token'], $params['_method']);
-        $score_data = [];
-        $score_data = $params['player_name'];
-        foreach ($params['score'] as $hole => $data) {
-            foreach ($data as $id => $score) {
-                if (is_array($score)) {
-                    $score_data[$id]['score_' . $hole] = $score['score'];
-                    $score_data[$id]['putter_' . $hole] = $score['putter'];
-                } else {
-                    $score_data[$id]['score_' . $hole] = $score;
-                }
-            }
-        }
         $score_cards = $game->score_cards;
         foreach ($score_cards as $score) {
-            $score->fill($score_data[$score->id]);
+            $score->fill($params[$score->id]);
             $score->save();
         }
         $game->memo = $params['memo'];
@@ -199,11 +193,15 @@ class ScoreController extends Controller
             $games->load('score_cards');
             foreach ($games as $key => $game) {
                 //対象ゲームのユーザーのスコアを取得する
-                $score_card = $game->score_cards->firstWhere('user_id', Auth::id());
-                $game->total_score = $score_card->getScoreCount('score');
-                $game->total_putter = $score_card->getScoreCount('putter');
-                $put_scores[] = $score_card->putterCount();
-                $score_type_tally[] = $score_card->scoreTypeTally();
+                $score_cards = $game->score_cards->where('user_id', Auth::id());
+                $game->total_score = 0;
+                $game->total_putter = 0;
+                foreach ($score_cards as $score_card) {
+                    $game->total_score += $score_card->getScoreCount('score');
+                    $game->total_putter += $score_card->getScoreCount('putter');
+                    $put_scores[] = $score_card->putterCount();
+                    $score_type_tally[] = $score_card->scoreTypeTally();
+                }
             }
             foreach ($put_scores ?? [] as $put) {
                 $putters['zero_put'] += $put['zero_put'];
@@ -223,61 +221,84 @@ class ScoreController extends Controller
         return view('score.analysis', compact('corse_lists', 'params', 'games', 'putters', 'scores'));
     }
 
-    private function createTableData($game)
+    private function createScoreTable($game)
     {
         $res = [];
         // View にテーブル形式で表示するためにデータを形成
-        foreach ($game->score_cards as $index => $score) {
-            for ($i = 1; $i < 22; $i++) {
-                switch ($i) {
-                    case (config('golf_role.BEFORE_HALF_NUM')):
-                        if ($score->user_id !== null) {
-                            $res['b_half']['setting'] = $score->getHalfScoreCount('par', 'out') . ' / ' . $score->getHalfScoreCount('yard', 'out');
-                            $res['b_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'out');
-                            $res['b_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'out');
-                        } else {
-                            $res['b_half'][$score->id] = $score->getHalfScoreCount('score', 'out');
-                        }
-                        break;
-                    case (config('golf_role.AFTER_HALF_NUM')):
-                        if ($score->user_id !== null) {
-                            $res['a_half']['setting'] = $score->getHalfScoreCount('par', 'in') . ' / ' . $score->getHalfScoreCount('yard', 'in');
-                            $res['a_half']['score'][$score->id]['score'] = $score->getHalfScoreCount('score', 'in');
-                            $res['a_half']['score'][$score->id]['putter'] = $score->getHalfScoreCount('putter', 'in');
-                        } else {
-                            $res['a_half'][$score->id] = $score->getHalfScoreCount('score', 'in');
-                        }
-                        break;
-                    case (config('golf_role.TOTAL_NUM')):
-                        if ($score->user_id !== null) {
-                            $res['total']['setting'] = $score->getScoreCount('par') . ' / ' . $score->getScoreCount('yard');
-                            $res['total']['score'][$score->id]['score'] = $score->getScoreCount('score');
-                            $res['total']['score'][$score->id]['putter'] =  $score->getScoreCount('putter');
-                        } else {
-                            $res['total'][$score->id] = $score->getScoreCount('score');
-                        }
-                        break;
-                    default:
-                        $row_num = ($i > 10) ? $i - 1 : $i; // Holeが10以上になるとforのindexHole数がズレるためindexから1をマイナス
-                        if ($score->user_id !== null) {
-                            $res[$row_num]['setting'] = $score->{'par_' . $row_num} . ' / ' . $score->{'yard_' . $row_num};
-                            $res[$row_num]['score'][$score->id]['score'] = $score->{'score_' . $row_num};
-                            $res[$row_num]['score'][$score->id]['putter'] = $score->{'putter_' . $row_num};
-                        } else {
-                            $res[$row_num][$score->id] = $score->{'score_' . $row_num};
-                        }
-                        break;
+        foreach ($game->score_cards as $score) {
+            $halfType = $score->start_flag ? 'second' : 'first';
+            for ($i = 1; $i < 10; $i++) {
+                if ($score->user_id == Auth::id()) {
+                    $res[$halfType]['yard'][$i] = $score->{'yard_' . $i};
+                    $res[$halfType]['par'][$i] = $score->{'par_' . $i};
+                    $res[$halfType]['owner']['score'][$i] = $score->{'score_' . $i};
+                    $res[$halfType]['owner']['putter'][$i] = $score->{'putter_' . $i};
+                } else {
+                    $res[$halfType]['companion'][$score->id][$i] = $score->{'score_' . $i};
                 }
+            }
+            if ($score->user_id == Auth::id()) { // 本人のスコアとコースデータの設定
+                $res[$halfType]['course'] = $score->course_name;
+                $res[$halfType]['total']['yard'] = $score->getScoreCount('yard');
+                $res[$halfType]['total']['par'] = $score->getScoreCount('par');
+                $res[$halfType]['owner']['total']['score'] = $score->getScoreCount('score');
+                $res[$halfType]['owner']['total']['putter'] = $score->getScoreCount('putter');
+                $res[$halfType]['owner']['player_name'] = $score->player_name;
+                $res[$halfType]['owner']['score_id'] = $score->id;
+            } else { // 同伴者のスコアを設定
+                $res[$halfType]['companion'][$score->id][0] = $score->player_name;
+                $res[$halfType]['companion'][$score->id][10] = $score->getScoreCount('score');
+                $res[$halfType]['companion'][$score->id][11] = $score->user_id;
+                ksort($res[$halfType]['companion'][$score->id]);
             }
         }
         return $res;
+    }
+
+    private function getTotalScore($game)
+    {
+        $total = [];
+        $owner = [];
+        $setting = [];
+        foreach ($game->score_cards as $score) {
+            if ($score->user_id != Auth::id()) {
+                if (isset($total[$score->user_id])) {
+                    $total[$score->user_id] += $score->getScoreCount('score');
+                } else {
+                    $total[$score->user_id] = $score->getScoreCount('score');
+                }
+            } else {
+                if (isset($owner['score'])) {
+                    $owner['score'] += $score->getScoreCount('score');
+                } else {
+                    $owner['score'] = $score->getScoreCount('score');
+                }
+                if (isset($owner['putter'])) {
+                    $owner['putter'] += $score->getScoreCount('putter');
+                } else {
+                    $owner['putter'] = $score->getScoreCount('putter');
+                }
+                if (isset($setting['par'])) {
+                    $setting['par'] += $score->getScoreCount('par');
+                    $setting['yard'] += $score->getScoreCount('yard');
+                } else {
+                    $setting['par'] = $score->getScoreCount('par');
+                    $setting['yard'] = $score->getScoreCount('yard');
+                }
+            }
+        }
+        $total['owner'] = $owner;
+        $total['setting'] = $setting;
+        return $total;
     }
 
     private function getPlayerName($game)
     {
         $names = [];
         foreach ($game->score_cards as $score) {
-            $names[$score->id] = $score->player_name;
+            if ($score->start_flag == 0) {
+                $names[$score->id] = $score->player_name;
+            }
         }
         return $names;
     }
