@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,27 +16,22 @@ class ScoreCard extends Model
         return $this->belongsTo(Game::class);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('default', function (Builder $builder) {
+            $builder->orderBy('start_flag', 'asc');
+        });
+    }
+
     public function getScoreCount(string $type)
     {
         $totalCount = 0;
-        for ($i = 1; $i < 19; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $columnName = $type . '_' . $i;
             $totalCount += $this->{$columnName};
         }
 
         return $totalCount;
-    }
-
-    public function getHalfScoreCount(string $type, string $inOut)
-    {   
-        $startHole = $inOut === 'out' ? 1 : 10;
-        $halfCount = 0;
-        for ($i = $startHole; $i < ($startHole + 9); $i++) {
-            $columnName = $type . '_' . $i;
-            $halfCount += $this->{$columnName};
-        }
-
-        return $halfCount;
     }
 
     // パター数別の集計処理
@@ -47,7 +43,7 @@ class ScoreCard extends Model
             'two_put' => 0,
             'other' => 0
         ];
-        for ($i = 1; $i < 19; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $column_name = 'putter_' . $i;
             switch ($this->{$column_name}) {
                 case (0):
@@ -78,7 +74,7 @@ class ScoreCard extends Model
             'd_bogey' => 0,
             'other' => 0
         ];
-        for ($i = 1; $i < 19; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $par_column = 'par_' . $i;
             $score_column = 'score_' . $i;
             switch ($this->{$score_column} - $this->{$par_column}) {
