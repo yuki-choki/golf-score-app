@@ -23,6 +23,9 @@
     <!-- google chart 読み込み -->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <!-- SortableJS 読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">

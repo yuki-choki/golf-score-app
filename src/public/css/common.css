@@ -23,8 +23,8 @@ nav .container {
 }
 .btn-twitter {
     color: #fff;
-    background-color: #1DA1F2;
-    border-color: #1DA1F2;
+    background-color: #1da1f2;
+    border-color: #1da1f2;
 }
 .btn-facebook {
     color: #fff;
@@ -53,4 +53,19 @@ nav .container {
 .col.pt-3.bg-gray-50,
 .col.py-3.bg-gray-50 {
     width: calc(100% - 230px);
+}
+.flex-container {
+    display: flex;
+}
+.grab:hover {
+    cursor: grab;
+}
+.grab:active {
+    cursor: grabbing;
+}
+.select_player {
+    width: 65px;
+}
+.row_cnt {
+    color: red;
 }

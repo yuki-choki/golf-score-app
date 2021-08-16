@@ -21,6 +21,7 @@ Route::get('/users', 'UsersController@index')->name('users');
 Route::get('/users/edit/', 'UsersController@edit')->name('users.edit');
 Route::get('/users/update/', 'UsersController@update')->name('users.update');
 Route::post('/users/update/', 'UsersController@update')->name('users.update');
+Route::get('/users/getUser/', 'UsersController@getUser')->name('users.getUser');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
@@ -31,8 +32,10 @@ Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')-
 Route::get('/scores/search', 'ScoreController@search')->name('scores.search');
 Route::post('/scores/search', 'ScoreController@search')->name('scores.search.post');
 Route::post('/scores/create', 'ScoreController@create')->name('scores.create');
+Route::get('/scores/getS3Text', 'ScoreController@getS3Text');
 Route::get('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis');
 Route::post('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis.post');
+Route::post('/scores/saveData', 'ScoreController@saveData')->name('scores.saveData');
 Route::resources([
     'scores' => 'ScoreController'
 ]);
