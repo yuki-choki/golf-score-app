@@ -38,4 +38,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return false;
     }
+
+    public function scopePlayerSearch($query, $array)
+    {
+        $query->where('parent_user_id', $array['id'])->orWhere('id',  $array['id']);
+
+        return $query;
+    }
 }

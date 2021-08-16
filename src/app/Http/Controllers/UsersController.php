@@ -48,4 +48,9 @@ class UsersController extends Controller
         }
         return redirect()->route('users.edit');
     }
+
+    public function getUser()
+    {
+        return Auth::user();
+    }
 }

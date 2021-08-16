@@ -1,24 +1,32 @@
 @extends('layouts.app')
-
 <script src="{{ asset('js/cropper.js') }}" defer></script>
+<script src="{{ asset('js/dragtable.js') }}" defer></script>
+<script src="{{ asset('js/create.js') }}" defer></script>
 
 @section('content')
 <div class="container">
     <div class="row">
         @include('components.main.sidebar')
         <div class="col pt-3 bg-gray-50">
-            <h3 class="h3">スコアカード読み込み</h3>
+            <h3 class="h3" id="test_submit">スコアカード読み込み</h3>
             <div class="card">
                 {{ Form::open(['action' => 'ScoreController@store' , 'method' => 'post', 'id' => 'upload-form']) }}
                 <div class="card-body pb-0">
                     <div>
                         {{ Form::hidden('corse_id', $corse['id']) }}
                     </div>
-                    <dropzone-component
-                        :corse="{{ json_encode($corse) }}"
-                        :max-size="{{ json_encode((string)$maxSize) }}"
-                    >
-                    </dropzone-component>
+
+                    <div class="flex-container">
+                        <div>
+                            <dropzone-component
+                                :corse="{{ json_encode($corse) }}"
+                                :max-size="{{ json_encode((string)$maxSize) }}"
+                            >
+                            </dropzone-component>
+                        </div>
+                        <div id="result_table" class='table-responsive'></div>
+                    </div>
+
                 </div>
                 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalTitle" aria-hidden="true" data-backdrop="static">
                     <div class="modal-dialog modal-dialog-centered" role="document">

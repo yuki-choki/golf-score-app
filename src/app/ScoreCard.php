@@ -27,7 +27,7 @@ class ScoreCard extends Model
     }
 
     public function getHalfScoreCount(string $type, string $inOut)
-    {   
+    {
         $startHole = $inOut === 'out' ? 1 : 10;
         $halfCount = 0;
         for ($i = $startHole; $i < ($startHole + 9); $i++) {
