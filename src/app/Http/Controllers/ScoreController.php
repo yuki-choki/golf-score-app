@@ -8,7 +8,7 @@ use App\User;
 use App\Corse;
 use App\ScoreCard;
 use Illuminate\Support\Facades\Auth;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class ScoreController extends Controller
 {
@@ -31,6 +31,8 @@ class ScoreController extends Controller
         foreach ($games as $key => $game) {
             //対象ゲームのユーザーのスコアを取得する
             $score_cards = $game->score_cards->where('user_id', Auth::id());
+            $scoreCard = new ScoreCard;
+            $game->registered_score = $scoreCard->registeredScore($game->id);
             $game->total_score = 0;
             $game->total_putter = 0;
             foreach ($score_cards as $score_card) {
@@ -63,19 +65,12 @@ class ScoreController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Game $game, String $half, Request $request)
     {
-        $corse = [];
+        $start_flag = $half === 'first' ? 0 : 1;
+        $course = $game->corse;
         $maxSize = self::MAX_FILE_SIZE * (1024 * 1024);
-        if ($request->method() === 'POST') {
-            $params = $request->all();
-            unset($params['_token']);
-            $corse = Corse::find($params['pref_id']);
-        } else {
-            return redirect()->route('scores.search');
-        }
-
-        return view('score.create', compact('corse', 'params', 'request', 'maxSize'));
+        return view('score.create', compact('game', 'course', 'maxSize', 'start_flag'));
     }
 
     /**
@@ -85,6 +80,74 @@ class ScoreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
+    {
+        $params = $request->all();
+        $users = User::all()->pluck('name', 'id');
+        $scoreDataByUser = $this->prepareScoreInsert($params, $users);
+        \DB::transaction(function () use ($scoreDataByUser) {
+            // 自身のスコアカード登録
+            $myScoreCord = new ScoreCard;
+            $myScoreCord->fill($scoreDataByUser['myScore']);
+            $myScoreCord->save();
+            // 同伴者のスコアカード登録
+            if (isset($scoreDataByUser['otherScore'])) {
+                foreach ($scoreDataByUser['otherScore'] as $score) {
+                    $otherScoreCord = new ScoreCard;
+                    $otherScoreCord->fill($score);
+                    $otherScoreCord->save();
+                }
+            }
+        });
+        session()->flash('msg_success', 'スコアを保存しました');
+
+        return redirect()->route('scores.index');
+    }
+
+    /**
+     * addRound method
+     *
+     * @param  App\Corse  $course
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addRound(Corse $course, Request $request)
+    {
+        $weathers = ['晴れ' => '晴れ', '曇り' => '曇り', '雨' => '雨', '雪' => '雪'];
+
+        return view('score.add-round', compact('course', 'weathers'));
+    }
+
+    /**
+     * storeRound method
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeRound(Request $request)
+    {
+        if ($request->getMethod() === 'POST') {
+            $params = $request->all();
+            unset($params['_token']);
+            $params['user_id'] = Auth::user()['id'];
+            $params['update_job'] = 'scores/storeRound';
+            $game = new Game($params);
+            if ($game->save()) {
+                session()->flash('msg_success', 'ラウンド情報を登録しました');
+            } else {
+                session()->flash('msg_error', 'ラウンド情報の登録に失敗しました');
+            }
+        }
+
+        return redirect()->route('scores.index');
+    }
+
+    /**
+     * upload method
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request)
     {
         if ($request->getMethod() === 'POST') {
             $base64_image = $request->input('image');
@@ -230,7 +293,7 @@ class ScoreController extends Controller
 
     private function createScoreTable($game)
     {
-        $res = [];
+        $res = ['first' => ['course' => '前半'], 'second' => ['course' => '後半']];
         // View にテーブル形式で表示するためにデータを形成
         foreach ($game->score_cards as $score) {
             $halfType = $score->start_flag ? 'second' : 'first';
@@ -310,6 +373,47 @@ class ScoreController extends Controller
         return $names;
     }
 
+    private function prepareScoreInsert($params, $users)
+    {
+        $scoreDataByUser = [];
+        foreach ($params['meta_column'] as $key => $meta) {
+            $defaultCourseName = $params['start_flag'] === 0 ? 'OUT' : 'IN';
+            if (is_numeric($meta)) { // ユーザーのスコア
+                for ($i = 1; $i <= 9; $i++) {
+                    $columnName = 'score_' . $i;
+                    $holeNumber = 'hole_' . $i;
+                    if ($meta == Auth::id()) {
+                        $scoreDataByUser['myScore'][$columnName] = $params[$holeNumber][$key];
+                    } else {
+                        $scoreDataByUser['otherScore'][$key][$columnName] = $params[$holeNumber][$key];
+                    }
+                }
+                if ($meta == Auth::id()) {
+                    $scoreDataByUser['myScore']['user_id'] = $meta;
+                    $scoreDataByUser['myScore']['player_name'] = $users[$meta];
+                    $scoreDataByUser['myScore']['start_flag'] = $params['start_flag'];
+                    $scoreDataByUser['myScore']['game_id'] = $params['game_id'];
+                    $scoreDataByUser['myScore']['course_name'] = $params['course_name'] ?? $defaultCourseName;
+                    $scoreDataByUser['myScore']['update_job'] = 'score/store';
+                } else {
+                    $scoreDataByUser['otherScore'][$key]['user_id'] = $meta;
+                    $scoreDataByUser['otherScore'][$key]['player_name'] = $users[$meta];
+                    $scoreDataByUser['otherScore'][$key]['start_flag'] = $params['start_flag'];
+                    $scoreDataByUser['otherScore'][$key]['game_id'] = $params['game_id'];
+                    $scoreDataByUser['otherScore'][$key]['course_name'] = $params['course_name'] ?? $defaultCourseName;
+                    $scoreDataByUser['otherScore'][$key]['update_job'] = 'score/store';
+                }
+            } else { // メタ情報
+                for ($i = 1; $i <= 9; $i++) {
+                    $columnName = $meta . '_' . $i;
+                    $holeNumber = 'hole_' . $i;
+                    $scoreDataByUser['myScore'][$columnName] = $params[$holeNumber][$key];
+                }
+            }
+        }
+        return $scoreDataByUser;
+    }
+
     /**
      * s3からスコアカードのtextファイルを取得する
      *
@@ -320,13 +424,10 @@ class ScoreController extends Controller
     // 設定ファイルはconfig/filesystems.phpにある
         $disk = Storage::disk('s3');
         $score_card_text_path = 'golftest5.txt';
-        // $score_card_png_path =
-
         if($disk->exists($score_card_text_path)){
             // ファイル取得はget()
             $s3_contents_raw = $disk->get($score_card_text_path);
             $s3_contents_array = json_decode($s3_contents_raw);
-            // var_dump($s3_contents_array);
 
             // -------------------------テーブル表示のための加工-------------------------
             // 表の三行目(ヘッダー)に「メタ情報のプルダウン」を表示するための処理
@@ -335,8 +436,7 @@ class ScoreController extends Controller
             $player_list = array_column($player_list, 'name', 'id');
             $meta_row = array();
             for($i=1; $i<=count($s3_contents_array[0]); $i++){
-                $text =
-                     "<select name='meta_column' class='select_player form-control form-control-sm pl-0'>
+                $text = "<select name='meta_column[]' class='select_player form-control form-control-sm pl-0'>
                             <option value='----'>----</option>
                             <option value='putter'>putter</option>
                             <option value='yard'>yard</option>
@@ -352,7 +452,7 @@ class ScoreController extends Controller
             // 表の二行目(ヘッダー)に「−」を表示するための処理
             $delete_btn_column_row = array();
             for($i=1; $i<=count($s3_contents_array[0]); $i++){
-                array_push($delete_btn_column_row, "-");
+                array_push($delete_btn_column_row, '<i class="btn_delete_column fas fa-trash-alt" style="cursor: pointer; color: red;"></i>');
             }
             array_unshift($s3_contents_array, $delete_btn_column_row);
 
@@ -363,7 +463,7 @@ class ScoreController extends Controller
             }
             array_unshift($s3_contents_array, $header_column_row);
 
-            $s3_contents = '<div class="table-responsive"><table  id="edit_table" class="draggable sortable text-center table-condensed">';
+            $s3_contents = '<div class="table-responsive"><table  id="edit_table" class="draggable sortable text-center table-condensed forget-ordering">';
 
             $row_no = 0;
             $nine_cnt = 1;
@@ -390,24 +490,26 @@ class ScoreController extends Controller
                 }
                 // 列の展開
                 $column_no = 0;
+                $hole_no = $row_no - 2;
                 foreach($row as $column) {
+                    if ($column === '') {
+                        $s3_contents .= '<td class="column_'. $column_no. '"><input type="text" name="hole_' . $hole_no . '[]" value="' . $column. '" style="width:50px"></td>';
+                        $column_no++;
+                        continue;
+                    }
                     switch ($column) {
-                        case '<i class="fas fa-arrows-alt-h grab"></i>':
+                        case (strpos($column, 'i class') === 1):
                             $s3_contents .= '<th class="column_'. $column_no. '">'. $column. '</th>';
                             break;
-                        case '-':
-                            $s3_contents .= '<th class="column_'. $column_no. '"><i class="btn_delete_column fas fa-trash-alt" style="cursor: pointer; color: red;"></i></th>';
-                            break;
-                        case '':
                         case (strpos($column, 'select') === 1):
                             $s3_contents .= '<th class="column_'. $column_no. '">'. $column. '</th>';
                             break;
                         default:
-                            $s3_contents .= '<td class="column_'. $column_no. '"><input type="text" name="" value="' . $column. '" style="width:50px"></td>';
+                            $s3_contents .= '<td class="column_'. $column_no. '"><input type="text" name="hole_' . $hole_no . '[]" value="' . $column. '" style="width:50px"></td>';
                             break;
                     }
                     $column_no++;
-               }
+                }
                 $s3_contents .= '</tr>';
 
                 if($row_no == 2){
@@ -421,7 +523,7 @@ class ScoreController extends Controller
             $s3_contents .= '<button id="add_row" class="btn btn-info" type="button" style="margin:3px">行を追加</button>';
             $s3_contents .= '<button id="add_column" class="btn btn-info" type="button" style="margin:3px">列を追加</button>';
             $s3_contents .= '<button id="reload_table" class="btn btn-info" type="button" style="margin:3px">再読込み</button>';
-            $s3_contents .= '<button id="save_btn" class="btn btn-success" type="button" style="margin:3px">保存</button>';
+            $s3_contents .= '<button id="decision_btn" class="btn btn-success" type="button" style="margin:3px">決定</button>';
             // -------------------------【終】テーブル表示のための加工-------------------------
         }else{
             $s3_contents = '対象のファイルは存在しません';

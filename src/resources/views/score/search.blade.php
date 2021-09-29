@@ -41,8 +41,7 @@
                                             <td>{{ $corse['name'] }}</td>
                                             <td>{{ $corse['address'] }}</td>
                                             <td>
-                                                {{ Form::open(['action' => 'ScoreController@create']) }}
-                                                {{ Form::hidden('pref_id', $corse['id']) }}
+                                                {{ Form::open(['url' => action('ScoreController@addRound', $corse['id']), 'method' => 'GET']) }}
                                                 {{ Form::submit('選択', ['class' => 'btn btn-sm btn-success']) }}
                                                 {{ Form::close() }}
                                             </td>
