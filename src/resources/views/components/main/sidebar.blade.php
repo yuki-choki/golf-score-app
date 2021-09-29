@@ -7,6 +7,12 @@
     </a>
     <a class="hover:no-underline" href="{{ route('scores.search') }}">
         <div class="side-bar-item d-flex p-3 hover:bg-base-deep hover:text-white">
+            <div class="col-2 text-center p-0"><i class="fas fa-file-signature fa-lg leading-6"></i></div>
+            <div class="col-10 ml-3 p-0"><span class="text-base">ラウンド登録</span></div>
+        </div>
+    </a>
+    <a class="hover:no-underline" href="{{ route('scores.index') }}">
+        <div class="side-bar-item d-flex p-3 hover:bg-base-deep hover:text-white">
             <div class="col-2 text-center p-0"><i class="fas fa-pen fa-lg leading-6"></i></div>
             <div class="col-10 ml-3 p-0"><span class="text-base">スコア登録</span></div>
         </div>

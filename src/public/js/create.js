@@ -8,7 +8,7 @@ function load_s3_score() {
         type: 'GET',
         // type:'POST',
         // ルーティングで設定したURL
-        url: 'getS3Text/', // 引数も渡せる
+        url: '/scores/getS3Text/', // 引数も渡せる
         dataType: 'json',
     }).done(function (results) {
         // 成功したときのコールバック
@@ -29,10 +29,10 @@ function load_s3_score() {
         var link = document.createElement('LINK');
         link.rel = "stylesheet";
         link.type = "text/css";
-        link.href = "../css/common.css";
+        link.href = "../../../css/common.css";
         var head = document.getElementsByTagName('HEAD').item(0);
         head.appendChild(link);
-
+c
         // 9行以上の追加は認められない
         checkEnableAddRow();
         addRowNumbering();
@@ -43,9 +43,15 @@ function load_s3_score() {
 // 9行以上は行追加できない制御をする関数
 function checkEnableAddRow() {
     if ($('#edit_table tbody tr').length >= 9) {
+        if ($('#edit_table tbody tr').length === 9) {
+            $('#decision_btn').attr('disabled', false);
+        } else {
+            $('#decision_btn').attr('disabled', true);
+        }
         $('#add_row').attr('disabled', true);
     } else {
         $('#add_row').attr('disabled', false);
+        $('#decision_btn').attr('disabled', true);
     }
 }
 function addRowNumbering() {
@@ -60,6 +66,40 @@ function addRowNumbering() {
             $('#edit_table tbody tr:nth-child(' + index + ') td:first-child').text(index).attr('class', color_class);
         }
     }
+}
+// スコアカードの入力欄バリデーション
+function scoreCardInputValidation() {
+    let invalid = true;
+    $('#result_table').find('input').each(function (key, el) {
+        $(el).css('background-color', '');
+        let value = $(el).val().trim();
+        if (value.length === 0 || isNaN(value)) {
+            $(el).css('background-color', 'red');
+            invalid = false;
+        }
+    })
+    return invalid;
+}
+// スコアカード選択肢バリデーション
+function scoreCardSelectValidation(data) {
+    let userSelect = false;
+    let emptySelect = true;
+    $.forEach($('.select_player'), function (el, key) {
+        // ログインユーザー自身が選択されているかチェック
+        if (data.id === Number($(el).val())) {
+            userSelect = true;
+        }
+        // 未選択の項目が無いかチェック
+        if ('----' === $(el).val()) {
+            emptySelect = false;
+        }
+    });
+    if (!userSelect) {
+        return {result: false, message: 'ログインユーザーを選択して下さい。'};
+    } else if (!emptySelect) {
+        return {result: false, message: '未選択の項目があります。'};
+    }
+    return {result: true};
 }
 // テーブルの行を削除
 $(document).on('click', '.btn_delete_row', function () {
@@ -87,7 +127,7 @@ $(document).on('click', '#add_row', function () {
     // 追加する行のhtmlの組み立て
     var append_column = '<tr><td class=></td><td><i class="btn_delete_row fas fa-trash-alt" style="cursor: pointer; color: red;"></i></td>'
     for (var i = 1; i < column_size; i++) {
-        append_column += '<td contenteditable="true"></td>'
+        append_column += '<td><input type="text" name="" value="" style="width:50px"></td>'
     }
     append_column += '</tr>'
     // 一番下に行を追加
@@ -121,32 +161,25 @@ $(function () {
     $(document).on('click', '#reload_table', load_s3_score);
 
     //スコアデータの保存
-    $(document).on('click', '#save_btn', function () {
+    $(document).on('click', '#decision_btn', function () {
         getUser()
             .done(function (data) {
-                let userSelect = false;
-                let emptySelect = true;
-                $.forEach($('.select_player'), function (el, key) {
-                    // ログインユーザー自身が選択されているかチェック
-                    if (data.id === Number($(el).val())) {
-                        userSelect = true;
-                    }
-                    // 未選択の項目が無いかチェック
-                    if ('----' === $(el).val()) {
-                        emptySelect = false;
-                    }
-                });
-                if (!userSelect) {
-                    alert('ログインユーザーを選択して下さい。');
-                    return false;
-                } else if (!emptySelect) {
-                    alert('未選択の項目があります。');
+                let selectValid = scoreCardSelectValidation(data);
+                if (!selectValid.result) {
+                    alert(selectValid.message);
                     return false;
                 }
-                let form = $('#upload-form').get(0);
-                let formData = new FormData(form);
-                let url = '/scores/saveData';
-                formPostAjax(url, formData);
+                if (!scoreCardInputValidation()) {
+                    alert("入力に無効な値があります\n数値を入力してください");
+                    return false;
+                }
+                $('#edit_table tbody tr').each(function(index, element){
+                    let holeNumber = index + 1;
+                    $(element).find('input').each(function (key, input) {
+                        $(input).attr('name', 'hole_' + holeNumber + '[]');
+                    })
+                })
+                $('#score-save-form').submit();
             })
             .fail(function () {
                 alert('ユーザーの取得に失敗しました');
@@ -158,7 +191,6 @@ $(function () {
         let options = {};
         let select = $(this).val();
         let count = 0;
-        $(this).attr('name', select); // name 属性変更
         $.forEach($(this).children(), function (el, key) {
             options[el.value] = el.innerHTML;
         });

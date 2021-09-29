@@ -36,7 +36,7 @@ $(function () {
 
     $('#send-s3').on('click', function () {
         const image = document.querySelector("#canvas").toDataURL("image/png");
-        let url = '/scores';
+        let url = '/scores/upload';
         let params = { image: image };
         postAjax(url, params)
             .done((data, textStatus, jqXHR) => {

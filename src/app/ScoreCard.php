@@ -101,4 +101,15 @@ class ScoreCard extends Model
 
         return $rtn;
     }
+
+    /**
+     * 前半、後半のスコア登録がされているか
+     * どちらも登録されている場合は true それ以外は false を返す
+     */
+    public function registeredScore(int $game_id)
+    {
+        $out_score = $this->where('game_id', $game_id)->where('start_flag', 0)->first();
+        $in_score = $this->where('game_id', $game_id)->where('start_flag', 1)->first();
+        return $out_score && $in_score;
+    }
 }

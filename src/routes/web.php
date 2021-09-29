@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,11 +32,14 @@ Route::get('/password/change', 'Auth\ChangePasswordController@showChangePassword
 Route::post('/password/change', 'Auth\ChangePasswordController@ChangePassword')->name('password.change');
 Route::get('/scores/search', 'ScoreController@search')->name('scores.search');
 Route::post('/scores/search', 'ScoreController@search')->name('scores.search.post');
-Route::post('/scores/create', 'ScoreController@create')->name('scores.create');
+Route::get('/scores/create/{game}/{half}', 'ScoreController@create')->name('scores.create');
 Route::get('/scores/getS3Text', 'ScoreController@getS3Text');
 Route::get('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis');
 Route::post('/scores/analysis', 'ScoreController@analysis')->name('scores.analysis.post');
 Route::post('/scores/saveData', 'ScoreController@saveData')->name('scores.saveData');
+Route::post('/scores/upload', 'ScoreController@upload')->name('scores.upload');
+Route::get('/scores/addRound/{course}', 'ScoreController@addRound')->name('scores.addRound');
+Route::post('/scores/storeRound/', 'ScoreController@storeRound')->name('scores.storeRound');
 Route::resources([
     'scores' => 'ScoreController'
 ]);
