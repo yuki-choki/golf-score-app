@@ -20,16 +20,10 @@
             </div>
         </a>
     @endif
-    <a class="hover:no-underline" href="#">
+    <a class="hover:no-underline" href="{{ route('users.friend') }}">
         <div class="side-bar-item d-flex p-3 hover:bg-base-deep hover:text-white">
             <div class="col-2 text-center p-0"><i class="fas fa-user-friends fa-lg leading-6"></i></div>
             <div class="col-10 ml-3 p-0"><span class="text-base">友達</span></div>
-        </div>
-    </a>
-    <a class="hover:no-underline" href="#">
-        <div class="side-bar-item d-flex p-3 hover:bg-base-deep hover:text-white">
-            <div class="col-2 text-center p-0"><i class="fas fa-cog fa-lg leading-6"></i></div>
-            <div class="col-10 ml-3 p-0"><span class="text-base">設定</span></div>
         </div>
     </a>
 </div>

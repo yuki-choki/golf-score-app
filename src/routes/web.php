@@ -22,6 +22,10 @@ Route::get('/users', 'UsersController@index')->name('users');
 Route::get('/users/edit/', 'UsersController@edit')->name('users.edit');
 Route::get('/users/update/', 'UsersController@update')->name('users.update');
 Route::post('/users/update/', 'UsersController@update')->name('users.update');
+Route::post('/users/friend/store', 'UsersController@friendStore')->name('users.friend.store');
+Route::get('/users/friend/', 'UsersController@friend')->name('users.friend');
+Route::post('/users/friend/update/{user}', 'UsersController@friendUpdate')->name('users.friend.update');
+Route::post('/users/friend/delete/{user}', 'UsersController@friendDelete')->name('users.friend.delete');
 Route::get('/users/getUser/', 'UsersController@getUser')->name('users.getUser');
 Route::get('/home', 'HomeController@index')->name('home');
 

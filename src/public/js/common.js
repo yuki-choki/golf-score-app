@@ -37,3 +37,9 @@ function getUser() {
     let url = '/users/getUser';
     return getAjax(url);
 }
+
+//ajax処理後のトーストメッセージ表示
+function showToastMessage(result = false, message = '') {
+    let type = result ? 'success' : 'error';
+    toastr[type](message);
+}
