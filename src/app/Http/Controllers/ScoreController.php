@@ -9,6 +9,7 @@ use App\Corse;
 use App\ScoreCard;
 use Illuminate\Support\Facades\Auth;
 use Storage;
+use Log;
 
 class ScoreController extends Controller
 {
@@ -90,8 +91,13 @@ class ScoreController extends Controller
             $base64_image = $request->input('image');
             $now = date('Y_m_d_H_i_s');
             $fileName = Auth::id() . '_' . $now . '.png';
-            // 保存先を S3 に変更
-            Storage::disk('local')->put('public/' . $fileName, $base64_image);
+
+            // S3に保存
+            Storage::disk('put_s3')->put($fileName, $base64_image);
+
+            // デバッグ用
+            // Storage::disk('local')->put('public/' . $fileName, $base64_image);
+
             // エラーハンドリング処理記述
         }
     }
@@ -155,7 +161,8 @@ class ScoreController extends Controller
     public function saveData(Request $request)
     {
         $params = $request->all();
-        var_dump($params);exit;
+        var_dump($params);
+        exit;
     }
 
     /**
@@ -316,13 +323,13 @@ class ScoreController extends Controller
      */
     public function getS3Text()
     {
-    // fly-system-s3aパッケージを使う
-    // 設定ファイルはconfig/filesystems.phpにある
-        $disk = Storage::disk('s3');
+        // fly-system-s3aパッケージを使う
+        // 設定ファイルはconfig/filesystems.phpにある
+        $disk = Storage::disk('get_s3');
         $score_card_text_path = 'golftest5.txt';
         // $score_card_png_path =
 
-        if($disk->exists($score_card_text_path)){
+        if ($disk->exists($score_card_text_path)) {
             // ファイル取得はget()
             $s3_contents_raw = $disk->get($score_card_text_path);
             $s3_contents_array = json_decode($s3_contents_raw);
@@ -330,19 +337,19 @@ class ScoreController extends Controller
 
             // -------------------------テーブル表示のための加工-------------------------
             // 表の三行目(ヘッダー)に「メタ情報のプルダウン」を表示するための処理
-            $array = ['id'=>1];
+            $array = ['id' => 1];
             $player_list = User::PlayerSearch($array)->get()->toArray();
             $player_list = array_column($player_list, 'name', 'id');
             $meta_row = array();
-            for($i=1; $i<=count($s3_contents_array[0]); $i++){
+            for ($i = 1; $i <= count($s3_contents_array[0]); $i++) {
                 $text =
-                     "<select name='meta_column' class='select_player form-control form-control-sm pl-0'>
+                    "<select name='meta_column' class='select_player form-control form-control-sm pl-0'>
                             <option value='----'>----</option>
                             <option value='putter'>putter</option>
                             <option value='yard'>yard</option>
                             <option value='par'>par</option>'";
-                foreach($player_list as $key => $val){
-                    $text .= "<option value=". $key. ">". $val. "</option>";
+                foreach ($player_list as $key => $val) {
+                    $text .= "<option value=" . $key . ">" . $val . "</option>";
                 }
                 $text .= '</select> ';
                 array_push($meta_row, $text);
@@ -351,14 +358,14 @@ class ScoreController extends Controller
             array_unshift($s3_contents_array, $meta_row);
             // 表の二行目(ヘッダー)に「−」を表示するための処理
             $delete_btn_column_row = array();
-            for($i=1; $i<=count($s3_contents_array[0]); $i++){
+            for ($i = 1; $i <= count($s3_contents_array[0]); $i++) {
                 array_push($delete_btn_column_row, "-");
             }
             array_unshift($s3_contents_array, $delete_btn_column_row);
 
             // 表の一行目(ヘッダー)に「⇔」を表示するための処理
             $header_column_row = array();
-            for($i=1; $i<=count($s3_contents_array[0]); $i++){
+            for ($i = 1; $i <= count($s3_contents_array[0]); $i++) {
                 array_push($header_column_row, '<i class="fas fa-arrows-alt-h grab"></i>');
             }
             array_unshift($s3_contents_array, $header_column_row);
@@ -368,49 +375,49 @@ class ScoreController extends Controller
             $row_no = 0;
             $nine_cnt = 1;
             // 行の展開
-            foreach($s3_contents_array as $row) {
+            foreach ($s3_contents_array as $row) {
                 $class = $row_no > 11 ? '"row_cnt"' : ''; //移動バーとゴミ箱があるので11から
                 switch ($row_no) {
                     case 0:
-                        $s3_contents .= '<thead><tr class="row_'. $row_no. '"><td></td><td></td>';
+                        $s3_contents .= '<thead><tr class="row_' . $row_no . '"><td></td><td></td>';
                         break;
                     case 1:
-                        $s3_contents .= '<tr class="row_'. $row_no. '"><td></td><td></td>';
+                        $s3_contents .= '<tr class="row_' . $row_no . '"><td></td><td></td>';
                         break;
                     case 2:
-                        $s3_contents .= '<tr class="row_'. $row_no. '"><td></td><td></td>';
+                        $s3_contents .= '<tr class="row_' . $row_no . '"><td></td><td></td>';
                         break;
                     default:
                         // 削除ボタン
                         // $s3_contents .= '<tr class="row_'. $row_no. '"><td><button class="btn_delete_row btn btn-danger btn-sm" type="button">-</button></td>';
-                        $s3_contents .= '<tr class="row_'. $row_no. '"><td class=' . $class . '>'. $nine_cnt. '</td><td><i class="btn_delete_row fas fa-trash-alt" style="cursor: pointer; color: red;"></i></td>';
+                        $s3_contents .= '<tr class="row_' . $row_no . '"><td class=' . $class . '>' . $nine_cnt . '</td><td><i class="btn_delete_row fas fa-trash-alt" style="cursor: pointer; color: red;"></i></td>';
 
                         $nine_cnt++;
                         break;
                 }
                 // 列の展開
                 $column_no = 0;
-                foreach($row as $column) {
+                foreach ($row as $column) {
                     switch ($column) {
                         case '<i class="fas fa-arrows-alt-h grab"></i>':
-                            $s3_contents .= '<th class="column_'. $column_no. '">'. $column. '</th>';
+                            $s3_contents .= '<th class="column_' . $column_no . '">' . $column . '</th>';
                             break;
                         case '-':
-                            $s3_contents .= '<th class="column_'. $column_no. '"><i class="btn_delete_column fas fa-trash-alt" style="cursor: pointer; color: red;"></i></th>';
+                            $s3_contents .= '<th class="column_' . $column_no . '"><i class="btn_delete_column fas fa-trash-alt" style="cursor: pointer; color: red;"></i></th>';
                             break;
                         case '':
                         case (strpos($column, 'select') === 1):
-                            $s3_contents .= '<th class="column_'. $column_no. '">'. $column. '</th>';
+                            $s3_contents .= '<th class="column_' . $column_no . '">' . $column . '</th>';
                             break;
                         default:
-                            $s3_contents .= '<td class="column_'. $column_no. '"><input type="text" name="" value="' . $column. '" style="width:50px"></td>';
+                            $s3_contents .= '<td class="column_' . $column_no . '"><input type="text" name="" value="' . $column . '" style="width:50px"></td>';
                             break;
                     }
                     $column_no++;
-               }
+                }
                 $s3_contents .= '</tr>';
 
-                if($row_no == 2){
+                if ($row_no == 2) {
                     $s3_contents .= '</thead><tbody>';
                 }
                 $row_no++;
@@ -423,7 +430,7 @@ class ScoreController extends Controller
             $s3_contents .= '<button id="reload_table" class="btn btn-info" type="button" style="margin:3px">再読込み</button>';
             $s3_contents .= '<button id="save_btn" class="btn btn-success" type="button" style="margin:3px">保存</button>';
             // -------------------------【終】テーブル表示のための加工-------------------------
-        }else{
+        } else {
             $s3_contents = '対象のファイルは存在しません';
         }
 
