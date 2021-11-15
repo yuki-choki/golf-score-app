@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="col-12" style="height: 300px">
-                            @if (isset($chart_data[1]))
+                            @if (isset($chart_data[1]) && $record['best_date'] && $record['worst_date'])
                                 <div id="target" class="col-12"></div>
                             @else
                                 <div class="text-center pt-5">
