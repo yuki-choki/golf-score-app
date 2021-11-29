@@ -49,6 +49,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer py-2">
+                                <button type="button" class="btn btn-secondary" id="rotate">回転</button>
                                 <button type="button" class="btn btn-primary" id="send-s3">読込開始</button>
                             </div>
                         </div>

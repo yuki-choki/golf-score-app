@@ -46,4 +46,8 @@ $(function () {
                 alert('ファイルのアップロードに失敗しました');
             })
     })
+
+    $('#rotate').on('click', function () {
+        cropImage.rotate(90);
+    })
 })
