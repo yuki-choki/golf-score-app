@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
@@ -52,5 +53,51 @@ class UsersController extends Controller
     public function getUser()
     {
         return Auth::user();
+    }
+
+    public function friend()
+    {
+        $friends = User::myFriends();
+        return view('users.friend', compact('friends'));
+    }
+
+    public function friendStore(Request $request)
+    {
+        $name = $request->name;
+        $parent_user_id = Auth::user()->id;
+        $update_job = 'users/friendStore';
+        $user = User::create(compact('name', 'parent_user_id', 'update_job'));
+        if ($user->save()) {
+            $response = [
+                'result' => true,
+                'message' => '友達を追加しました',
+                'id' => $user->id
+            ];
+        } else {
+            $response = ['result' => false, 'message' => '友達の追加に失敗しました'];
+        }
+        return response()->json($response);
+    }
+
+    public function friendUpdate(User $user, Request $request)
+    {
+        $user->name = $request->name;
+        if ($user->save()) {
+            $response = ['result' => true, 'message' => '更新しました'];
+        } else {
+            $response = ['result' => false, 'message' => '更新に失敗しました'];
+        }
+        return response()->json($response);
+    }
+
+    public function friendDelete(User $user, Request $request)
+    {
+        $user->delete_flg = 1;
+        if ($user->save()) {
+            $response = ['result' => true, 'message' => '友達を削除しました'];
+        } else {
+            $response = ['result' => false, 'message' => '友達の削除に失敗しました'];
+        }
+        return response()->json($response);
     }
 }
