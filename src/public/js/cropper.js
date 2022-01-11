@@ -9,9 +9,8 @@ $(function () {
         let modalImage = $('#image').attr('src', img.src).get(0);
         cropImage = new Cropper(modalImage, {
             viewMode: 1,
-            preview: '.preview',
-            minContainerWidth: 402,
-            minContainerHeight: 402,
+            minContainerWidth: 400,
+            minContainerHeight: 400,
             background: false,
             crop(event) {
                 x1 = event.detail.x;
@@ -47,7 +46,19 @@ $(function () {
             })
     })
 
+    $('.dropzone-field').on('click', function () {
+        $('#hidden-file').click();
+    })
     $('#rotate').on('click', function () {
         cropImage.rotate(90);
+    })
+    $('#zoom-in').on('click', function () {
+        cropImage.zoom(0.1);
+    })
+    $('#zoom-out').on('click', function () {
+        cropImage.zoom(-0.1);
+    })
+    $('#reset').on('click', function () {
+        cropImage.reset();
     })
 })
