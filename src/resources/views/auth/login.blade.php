@@ -32,7 +32,7 @@
                                 {{ Form::password('password', ['class' => 'form-control'])}}
                             </div>
                             <div class="form-group">
-                                {{ Form::checkbox('remember', 'remember', false, [old('remember') ? 'checked' : '']) }}
+                                {{ Form::checkbox('remember', 'remember', false, [old('remember') ? 'checked' : '', 'id' => 'remember']) }}
                                 {{ Form::label('remember', 'ログインを記憶する', ['class' => 'mb-0']) }}
                             </div>
                             <div class="form-group">
