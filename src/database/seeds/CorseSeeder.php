@@ -21,7 +21,7 @@ class CorseSeeder extends Seeder
                 $page++;
                 $client = new RakutenRws_Client();
                 // アプリID (デベロッパーID) をセット
-                $client->setApplicationId(env('RAKUTEN_APPLICATION_ID', false));
+                $client->setApplicationId(config('app.rakuten_application_id', false));
                 // ゴルフ情報取得
                 $response = $client->execute('GoraGoraGolfCourseSearch', [
                     'areaCode' => $prefCode, // 都道府県コード
