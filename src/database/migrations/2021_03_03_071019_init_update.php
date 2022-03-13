@@ -35,6 +35,18 @@ class InitUpdate extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('games', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['corse_id']);
+        });
+
+        Schema::table('score_cards', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['game_id']);
+        });
+
+        Schema::table('corse_holes', function (Blueprint $table) {
+            $table->dropForeign(['corse_id']);
+        });
     }
 }
