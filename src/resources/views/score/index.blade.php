@@ -22,7 +22,14 @@
                             @foreach ($games as $game)
                                 <tr>
                                     <td>{{ $game->date }}</td>
-                                    <td>{{ $game->corse->name }}</td>
+                                    <td>
+                                        {{ $game->corse->name }}
+                                        @if ($game->registered_score)
+                                            <i class="far fa-check-circle text-success"></i>
+                                        @else
+                                            <i class="fas fa-exclamation-circle text-danger"></i>
+                                        @endif
+                                    </td>
                                     <td>{{ $game->total_score }}</td>
                                     <td>{{ $game->total_putter }}</td>
                                     <td>
