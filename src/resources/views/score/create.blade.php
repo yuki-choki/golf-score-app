@@ -48,6 +48,18 @@
                                 </div>
                             </div>
                             <div class="modal-footer py-2">
+                                <button type="button" class="btn btn-outline-secondary" id="reset">リセット</button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary btn-lg" id="zoom-in">
+                                        <span class="fa fa-search-plus"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-lg" id="zoom-out">
+                                        <span class="fa fa-search-minus"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-lg" id="rotate">
+                                        <span class="fa fa-redo-alt"></span>
+                                    </button>
+                                </div>
                                 <button type="button" class="btn btn-primary" id="send-s3">読込開始</button>
                             </div>
                         </div>

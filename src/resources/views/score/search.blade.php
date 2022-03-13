@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-md-2 pl-0">
                     <label class="d-block mb-0">&nbsp;</label>
-                    {{ Form::button('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary px-4', 'type' =>'submit']) }}
+                    {{ Form::button('検索', ['class' => 'btn btn-primary', 'type' =>'submit']) }}
                 </div>
             </div>
             {{ Form::close() }}

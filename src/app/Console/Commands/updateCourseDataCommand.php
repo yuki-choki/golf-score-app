@@ -1,17 +1,47 @@
 <?php
 
-use Illuminate\Database\Seeder;
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CorseSeeder extends Seeder
+class updateCourseDataCommand extends Command
 {
     /**
-     * Run the database seeds.
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'command:updateCourseDataCommand';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '楽天GORAでのゴルフコース取得API実行。ゴルフコースデータを最新状態にする';
+
+    /**
+     * Create a new command instance.
      *
      * @return void
      */
-    public function run()
+    public function __construct()
     {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        // 既存のゴルフコース情報を削除
+        DB::table('corses')->truncate();
+        DB::unprepared("ALTER TABLE corses AUTO_INCREMENT = 1");
+
         // 全都道府県のゴルフコースデータ取得
         for ($prefCode = 1; $prefCode <= 47; $prefCode++) {
             $res = true;
@@ -19,7 +49,7 @@ class CorseSeeder extends Seeder
             while ($res) {
                 sleep(1);
                 $page++;
-                $client = new RakutenRws_Client();
+                $client = new \RakutenRws_Client();
                 // アプリID (デベロッパーID) をセット
                 $client->setApplicationId(config('app.rakuten_application_id', false));
                 // ゴルフ情報取得
@@ -47,7 +77,7 @@ class CorseSeeder extends Seeder
                         $data['address'] = $corse['Item']['address'];
                         $data['course_name'] = json_encode($courseName, JSON_UNESCAPED_UNICODE);
                         $data['pref_code'] = $prefCode;
-                        $data['update_job'] = 'CorseSeeder';
+                        $data['update_job'] = 'updateCourseDataCommand';
                         DB::table('corses')->insert($data);
                     }
                 } else {

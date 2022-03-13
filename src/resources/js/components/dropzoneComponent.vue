@@ -3,7 +3,7 @@
         <div class="col-12 mb-3">
             <h5 class="pb-1 border-rgba(0, 0, 0, 0.125) border-bottom h5">コース名：{{ corse.name }}</h5>
         </div>
-        <div class="col-md-6">
+        <div class="col-12">
             <div
                 class="dropzone-field"
                 id="upload_image"
@@ -22,6 +22,7 @@
                 <span style="color: red;">{{ errorMessage }}</span>
             </p>
         </div>
+        <input type="file" hidden name="file" id="hidden-file" @change="dropFile">
         <div class="col-12 my-3">
             <button type="button" :class="buttonClass" :disabled="disabled" data-toggle="modal" data-target="#previewModal" id="image-select-btn">決定</button>
         </div>
@@ -71,8 +72,11 @@
             // 通常、ファイルをドロップしたときにはブラウザがドロップされた画像を表示するような動きをするが、
             // @drop.preventとすることでその機能を止めている。
             dropFile(event) {
-                const files = event.dataTransfer.files;
+                const files = event.target.files || event.dataTransfer.files;
                 this.file = files[0];
+                if (this.file === undefined) {
+                    return false;
+                }
                 this.isEnter = false;
                 this.isDrop = true;
                 if (!this.imageValidation(this.file)) {
@@ -108,6 +112,7 @@
         height: 300px;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 15px;
+        cursor: pointer;
     }
     .enter {
         border: 5px dotted #38c172;

@@ -337,8 +337,7 @@ class ScoreController extends Controller
 
             // -------------------------テーブル表示のための加工-------------------------
             // 表の三行目(ヘッダー)に「メタ情報のプルダウン」を表示するための処理
-            $array = ['id' => 1];
-            $player_list = User::PlayerSearch($array)->get()->toArray();
+            $player_list = User::PlayerSearch(['id' => Auth::user()['id']])->get()->toArray();
             $player_list = array_column($player_list, 'name', 'id');
             $meta_row = array();
             for ($i = 1; $i <= count($s3_contents_array[0]); $i++) {

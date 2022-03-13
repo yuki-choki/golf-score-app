@@ -1985,6 +1985,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {},
   props: {
@@ -2030,8 +2031,13 @@ __webpack_require__.r(__webpack_exports__);
     dropFile: function dropFile(event) {
       var _this = this;
 
-      var files = event.dataTransfer.files;
+      var files = event.target.files || event.dataTransfer.files;
       this.file = files[0];
+
+      if (this.file === undefined) {
+        return false;
+      }
+
       this.isEnter = false;
       this.isDrop = true;
 
@@ -6553,7 +6559,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".dropzone-field {\n  color: gray;\n  font-weight: bold;\n  font-size: 1.2em;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 500px;\n  height: 300px;\n  border: 1px solid rgba(0, 0, 0, 0.125);\n  border-radius: 15px;\n}\n.enter {\n  border: 5px dotted #38c172;\n}\n.drop {\n  justify-content: start;\n  border: none;\n}\n", ""]);
+exports.push([module.i, ".dropzone-field {\n  color: gray;\n  font-weight: bold;\n  font-size: 1.2em;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 500px;\n  height: 300px;\n  border: 1px solid rgba(0, 0, 0, 0.125);\n  border-radius: 15px;\n  cursor: pointer;\n}\n.enter {\n  border: 5px dotted #38c172;\n}\n.drop {\n  justify-content: start;\n  border: none;\n}\n", ""]);
 
 // exports
 
@@ -38357,7 +38363,7 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "col-md-6" }, [
+    _c("div", { staticClass: "col-12" }, [
       _c(
         "div",
         {
@@ -38398,6 +38404,11 @@ var render = function() {
           ])
         : _vm._e()
     ]),
+    _vm._v(" "),
+    _c("input", {
+      attrs: { type: "file", hidden: "", name: "file", id: "hidden-file" },
+      on: { change: _vm.dropFile }
+    }),
     _vm._v(" "),
     _c("div", { staticClass: "col-12 my-3" }, [
       _c(

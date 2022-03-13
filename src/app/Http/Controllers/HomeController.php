@@ -26,9 +26,9 @@ class HomeController extends Controller
     public function index()
     {
         $games = Game::all();
-        $games->load('score_cards');
-        $chart_data = [];
-        $chart_data[] = ['ラウンド日', 'スコア', 'パット'];
+        $chart_data = [
+            ['ラウンド日', 'スコア', 'パット']
+        ];
         $average = [
             'score' => 0,
             'putter' => 0,
@@ -36,7 +36,9 @@ class HomeController extends Controller
         ];
         $record = [
             'best' => 0,
-            'worst' => 0
+            'best_date' => '',
+            'worst' => 0,
+            'worst_date' => ''
         ];
         foreach ($games as $key => $game) {
             // 対象ゲームのユーザーのスコアを取得する
@@ -53,7 +55,7 @@ class HomeController extends Controller
             $average['putter'] += $game->total_putter;
             $average['count']++;
             // ベストスコア取得
-            if ($record['best'] === 0 || $record['best'] > $game->total_score) {
+            if ($record['best'] > $game->total_score || $record['best'] === 0) {
                 $record['best'] = $game->total_score;
                 $record['best_date'] = date("'y n/d", strtotime($game->date));
             }
