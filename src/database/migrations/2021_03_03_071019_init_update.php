@@ -22,10 +22,6 @@ class InitUpdate extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('game_id')->references('id')->on('games');
         });
-
-        Schema::table('corse_holes', function (Blueprint $table) {
-            $table->foreign('corse_id')->references('id')->on('corses');
-        });
     }
 
     /**
@@ -43,10 +39,6 @@ class InitUpdate extends Migration
         Schema::table('score_cards', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['game_id']);
-        });
-
-        Schema::table('corse_holes', function (Blueprint $table) {
-            $table->dropForeign(['corse_id']);
         });
     }
 }
