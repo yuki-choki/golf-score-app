@@ -12,6 +12,7 @@ class CorseSeeder extends Seeder
      */
     public function run()
     {
+        $courseIds = DB::table('corses')->select('id')->get()->pluck('id')->toArray();
         // 全都道府県のゴルフコースデータ取得
         for ($prefCode = 1; $prefCode <= 47; $prefCode++) {
             $res = true;
@@ -30,6 +31,9 @@ class CorseSeeder extends Seeder
                 if ($response->isOk()) {
                     $corseDataArr = $response->getData()['Items'];
                     foreach ($corseDataArr as $corse) {
+                        if (in_array($corse['Item']['golfCourseId'], $courseIds)) {
+                            continue;
+                        }
                         usleep(300000); // 0.3秒間隔で処理を実行
                         $detail = $client->execute('GoraGoraGolfCourseDetail', [
                             'golfCourseId' => $corse['Item']['golfCourseId'],
@@ -43,6 +47,7 @@ class CorseSeeder extends Seeder
                         }
                         $courseName = explode('・', $detail->getData()['Item']['courseName']);
                         $data = [];
+                        $data['id'] = $corse['Item']['golfCourseId'];
                         $data['name'] = $corse['Item']['golfCourseName'];
                         $data['address'] = $corse['Item']['address'];
                         $data['course_name'] = json_encode($courseName, JSON_UNESCAPED_UNICODE);
