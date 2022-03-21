@@ -38,10 +38,7 @@ class updateCourseDataCommand extends Command
      */
     public function handle()
     {
-        // 既存のゴルフコース情報を削除
-        DB::table('corses')->truncate();
-        DB::unprepared("ALTER TABLE corses AUTO_INCREMENT = 1");
-
+        $courseIds = DB::table('corses')->select('id')->get()->pluck('id')->toArray();
         // 全都道府県のゴルフコースデータ取得
         for ($prefCode = 1; $prefCode <= 47; $prefCode++) {
             $res = true;
@@ -60,6 +57,9 @@ class updateCourseDataCommand extends Command
                 if ($response->isOk()) {
                     $corseDataArr = $response->getData()['Items'];
                     foreach ($corseDataArr as $corse) {
+                        if (in_array($corse['Item']['golfCourseId'], $courseIds)) {
+                            continue;
+                        }
                         usleep(300000); // 0.3秒間隔で処理を実行
                         $detail = $client->execute('GoraGoraGolfCourseDetail', [
                             'golfCourseId' => $corse['Item']['golfCourseId'],
@@ -73,11 +73,12 @@ class updateCourseDataCommand extends Command
                         }
                         $courseName = explode('・', $detail->getData()['Item']['courseName']);
                         $data = [];
+                        $data['id'] = $corse['Item']['golfCourseId'];
                         $data['name'] = $corse['Item']['golfCourseName'];
                         $data['address'] = $corse['Item']['address'];
                         $data['course_name'] = json_encode($courseName, JSON_UNESCAPED_UNICODE);
                         $data['pref_code'] = $prefCode;
-                        $data['update_job'] = 'updateCourseDataCommand';
+                        $data['update_job'] = 'CorseSeeder';
                         DB::table('corses')->insert($data);
                     }
                 } else {
@@ -92,5 +93,6 @@ class updateCourseDataCommand extends Command
                 }
             }
         }
+
     }
 }
